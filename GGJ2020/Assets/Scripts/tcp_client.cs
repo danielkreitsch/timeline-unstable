@@ -15,7 +15,6 @@ public class tcp_client : MonoBehaviour
 	public string master_ip = "127.0.0.1";
 	public int port = 12345;
 	public bool send_data = false;
-	public string test_data = "hallo testdata";
 	public game_state state = new game_state();
 
 	// Start is called before the first frame update

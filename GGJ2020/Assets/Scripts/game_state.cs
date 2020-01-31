@@ -2,5 +2,6 @@
 
 public class game_state 
 {
-    public string testdata;
+	long tick = 0;
+    public string testdata = "hello ggj2020";
 }
