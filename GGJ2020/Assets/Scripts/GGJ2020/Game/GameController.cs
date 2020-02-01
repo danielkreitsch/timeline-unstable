@@ -9,7 +9,8 @@ public class GameController : MonoBehaviour
     
     void Start()
     {
-        game.MyPlayer.Board.GenerateSlots();
+        
+        //game.MyPlayer.Board.GenerateSlots(5);
     }
 
     void Update()
