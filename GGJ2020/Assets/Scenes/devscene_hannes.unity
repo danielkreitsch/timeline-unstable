@@ -130,6 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 136633694}
+  - component: {fileID: 136633695}
   - component: {fileID: 136633693}
   m_Layer: 0
   m_Name: Scriptholder
@@ -147,13 +148,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 136633692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f25fa48d1e078a1489d45f705bb0ddab, type: 3}
+  m_Script: {fileID: 11500000, guid: 082472abd1c04e546a5acbf79e0832f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  master_ip: 127.0.0.1
-  port: 12345
-  send_data: 0
-  test_data: hallo testdata
+  MasterIp: 127.0.0.1
+  Port: 12345
+  IsServer: 0
+  SendData: 0
 --- !u!4 &136633694
 Transform:
   m_ObjectHideFlags: 0
@@ -168,6 +169,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &136633695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 136633692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082472abd1c04e546a5acbf79e0832f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MasterIp: 127.0.0.1
+  Port: 12345
+  IsServer: 1
+  SendData: 0
 --- !u!1 &1876676115
 GameObject:
   m_ObjectHideFlags: 0
