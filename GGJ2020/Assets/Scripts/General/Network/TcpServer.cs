@@ -10,102 +10,100 @@ using UnityEngine.Events;
 
 namespace GGJ2020
 {
-	public class TcpServer : MonoBehaviour
-	{
-		private TcpClient client;
-		private Thread serverThread;
-		private TcpListener tcpListener;
-		private byte[] buffer;
+    public class TcpServer : MonoBehaviour
+    {
+        private TcpClient client;
+        private Thread serverThread;
+        private TcpListener tcpListener;
+        private byte[] buffer;
 
-		public int Port = 12345;
+        public int Port = 12345;
 
-		public bool SendData = false;
+        public bool SendData = false;
 
-		[SerializeField] private GameController gameController;
+        [SerializeField] private GameController gameController;
 
-		// Start is called before the first frame update
-		void Start()
-		{
-			serverThread = new Thread(MasterListen);
-			serverThread.IsBackground = true;
-			serverThread.Start();
-		}
+        // Start is called before the first frame update
+        void OnEnable()
+        {
+            serverThread = new Thread(MasterListen);
+            serverThread.IsBackground = true;
+            serverThread.Start();
+        }
 
-		// Update is called once per frame
-		void Update()
-		{
-			if (SendData)
-			{
-				SendData = false;
-				var data = JsonUtility.ToJson(new PlayerDto());
-				MasterWrite(NetworkUtility.ToNetwork(new PlayerDto()));
-				Debug.Log("Master Sent: " + data);
-			}
-		}
+        // Update is called once per frame
+        void Update()
+        {
+            if (SendData)
+            {
+                SendData = false;
+                var data = JsonUtility.ToJson(new PlayerDto());
+                MasterWrite(NetworkUtility.ToNetwork(new PlayerDto()));
+                Debug.Log("Master Sent: " + data);
+            }
+        }
 
+        void MasterListen()
+        {
+            try
+            {
+                tcpListener = new TcpListener(IPAddress.Any, Port);
+                tcpListener.Start();
+                Debug.Log("Server is listening on port " + Port);
 
-		void MasterListen()
-		{
-			try
-			{
-				tcpListener = new TcpListener(IPAddress.Any, Port);
-				tcpListener.Start();
-				Debug.Log("Server is listening on port " + Port);
+                client = tcpListener.AcceptTcpClient();
+                var stream = client.GetStream();
 
-				client = tcpListener.AcceptTcpClient();
-				var stream = client.GetStream();
+                buffer = new byte[2048];
 
-				buffer = new byte[2048];
+                while (true)
+                {
+                    if (!stream.CanRead)
+                    {
+                        Debug.Log("Master Cannot Read");
+                        continue;
+                    }
+                    if (stream.DataAvailable)
+                    {
+                        int l = stream.Read(buffer, 0, buffer.Length);
+                        //Debug.Log("Master read " + l + "Bytes");
+                        string receivedString = Encoding.ASCII.GetString(buffer);
+                        Debug.Log("Received: " + receivedString);
+                        var rec = NetworkUtility.FromNetwork(receivedString);
+                        Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+                    }
+                }
+            }
+            catch (SocketException)
+            {
+                Debug.Log("Master Network error");
+            }
+        }
 
-				while (true)
-				{
-					if (!stream.CanRead)
-					{
-						Debug.Log("Master Cannot Read");
-						continue;
-					}
-					if (stream.DataAvailable)
-					{
-						int l = stream.Read(buffer, 0, buffer.Length);
-						//Debug.Log("Master read " + l + "Bytes");
-						string receivedString = Encoding.ASCII.GetString(buffer);
-						Debug.Log("Received: " + receivedString);
-						var rec = NetworkUtility.FromNetwork(receivedString);
-						Run.OnMainThread(() => gameController.OnReceivePacket(rec));
-					}
-				}
-			}
-			catch (SocketException)
-			{
-				Debug.Log("Master Network error");
-			}
+        void MasterWrite(string message)
+        {
+            if (client == null)
+            {
+                Debug.Log("No Client connected.");
+                return;
+            }
 
-		}
+            try
+            {
+                var stream = client.GetStream();
+                if (!stream.CanWrite)
+                {
+                    Debug.Log("Master Cannot write to stream");
+                    return;
+                }
 
-		void MasterWrite(string message)
-		{
-			if (client == null)
-			{
-				Debug.Log("No Client connected.");
-				return;
-			}
-
-			try
-			{
-				var stream = client.GetStream();
-				if (!stream.CanWrite)
-				{
-					Debug.Log("Master Cannot write to stream");
-					return;
-				}
-
-				byte[] messageBytes = Encoding.ASCII.GetBytes(message);
-				stream.Write(messageBytes, 0, messageBytes.Length);
-			}
-			catch (SocketException)
-			{
-				Debug.Log("Master Sending Failed");
-			}
-		}
-	}
+                byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+                stream.Write(messageBytes, 0, messageBytes.Length);
+            }
+            catch (SocketException)
+            {
+                Debug.Log("Master Sending Failed");
+            }
+        }
+    }
 }
