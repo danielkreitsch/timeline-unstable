@@ -14,8 +14,7 @@ public class TcpServer : MonoBehaviour
 	private Thread serverThread;
 	private TcpListener tcpListener;
 	private byte[] buffer;
-
-	public string MasterIp = "127.0.0.1";
+	
 	public int Port = 12345;
 
 	public bool SendData = false;
@@ -27,7 +26,7 @@ public class TcpServer : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		serverThread = new Thread(new ThreadStart(MasterListen));
+		serverThread = new Thread(MasterListen);
 		serverThread.IsBackground = true;
 		serverThread.Start();
 	}
@@ -49,9 +48,9 @@ public class TcpServer : MonoBehaviour
 	{
 		try
 		{
-			tcpListener = new TcpListener(IPAddress.Parse(MasterIp), Port);
+			tcpListener = new TcpListener(IPAddress.Any, Port);
 			tcpListener.Start();
-			Debug.Log("Server is listening on " + MasterIp + ":" + Port);
+			Debug.Log("Server is listening on port " + Port);
 
 			client = tcpListener.AcceptTcpClient();
 			var stream = client.GetStream();
