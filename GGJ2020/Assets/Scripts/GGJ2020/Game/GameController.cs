@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using GGJ2020;
 using GGJ2020.Game;
 using UnityEngine;
 
@@ -42,15 +43,18 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (game.Timer >= 20)
+        if (game.Started)
         {
-            game.Timer = 20;
+            if (game.Timer >= 20)
+            {
+                game.Timer = 20;
+            }
+            else
+            {
+                game.Timer += Time.deltaTime;
+            }
         }
-        else
-        {
-            game.Timer += Time.deltaTime;
-        }
-        
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             game.PrepareBoard(slotCount, itemCount);

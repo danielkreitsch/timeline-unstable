@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using GGJ2020;
 using GGJ2020.Game;
 using UnityEngine;
 
 public class Game : MonoBehaviour
 {
     [SerializeField] private Player myPlayer;
-    
+
     [SerializeField] private GameObject[] itemPrefabs;
 
     private PlayerDto otherPlayerData;
@@ -14,6 +15,8 @@ public class Game : MonoBehaviour
     private State state;
 
     private float timer;
+
+    private bool started;
 
     public Player MyPlayer => myPlayer;
 
@@ -35,11 +38,20 @@ public class Game : MonoBehaviour
         set => timer = value;
     }
 
-    /**
-     * Die Variable slots wird noch ignoriert
-     */
+    public bool Started => started;
+    
     public void PrepareBoard(int slots, int items)
     {
+        StartCoroutine(CPrepareBoard(slots, items));
+    }
+
+    IEnumerator CPrepareBoard(int slots, int items)
+    {
+        timer = 0;
+        started = false;
+        
+        //myPlayer.Board.GenerateSlots(slots);
+        
         foreach (Slot slot in GetAllSlots())
         {
             if (slot.Item != null)
@@ -48,12 +60,13 @@ public class Game : MonoBehaviour
                 slot.Item = null;
             }
         }
-        
+
         List<Slot> randomSlots = GetRandomSlots(items);
         List<GameObject> randomItemPrefabs = GetRandomItemPrefabs(items);
-        
+
         for (int i = 0; i < items; i++)
         {
+            yield return new WaitForSeconds(0.25f);
             Slot slot = randomSlots[i];
             GameObject itemPrefab = randomItemPrefabs[i];
             GameObject itemObj = Instantiate(itemPrefab);
@@ -62,6 +75,7 @@ public class Game : MonoBehaviour
             slot.Item.PlaySpawnAnimation();
         }
 
+        started = true;
         state = State.TakeItem;
     }
 
@@ -73,7 +87,7 @@ public class Game : MonoBehaviour
             state = State.TakeItem;
         }
     }
-    
+
     public List<Slot> GetAllSlots()
     {
         List<Slot> slots = new List<Slot>();
@@ -84,7 +98,7 @@ public class Game : MonoBehaviour
         }
         return slots;
     }
-        
+
     public List<Slot> GetRandomSlots(int count)
     {
         List<Slot> randomSlots = new List<Slot>();
