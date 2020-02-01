@@ -1052,6 +1052,12 @@ PrefabInstance:
       propertyPath: myPlayer
       value: 
       objectReference: {fileID: 1090082192}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: itemPrefab
+      value: 
+      objectReference: {fileID: 6955614290009643512, guid: be75463179328334b993c453ba1ffd2e,
+        type: 3}
     - target: {fileID: 2010872647832110053, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1111,6 +1117,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Game
+      objectReference: {fileID: 0}
+    - target: {fileID: 2010872647832110055, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: itemCount
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70e2660fe2ce9c14aa30cf99273eeb54, type: 3}

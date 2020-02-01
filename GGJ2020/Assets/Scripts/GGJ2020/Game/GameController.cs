@@ -6,8 +6,6 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private Game game;
-
-    [SerializeField] private GameObject itemPrefab;
     
     [SerializeField] private LayerMask slotLayer;
 
@@ -15,7 +13,13 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private LayerMask boardLayer;
 
-    private State state = State.TakeItem;
+    /**
+     * Wird noch ignoriert (noch nicht implementiert)
+     */
+    [SerializeField] private int slotCount;
+
+    [SerializeField] private int itemCount;
+    
     private Slot hoveringSlot;
     private Item hoveringItem;
     private Item _cursorItem;
@@ -28,18 +32,17 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        PrepareBoard();
-        //game.MyPlayer.Board.GenerateSlots(5);
+        game.PrepareBoard(slotCount, itemCount);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            PrepareBoard();
+            game.PrepareBoard(slotCount, itemCount);
         }
         
-        if (state == State.TakeItem)
+        if (game.State == State.TakeItem)
         {
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, itemLayer))
@@ -48,21 +51,21 @@ public class GameController : MonoBehaviour
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
+                            
                         CursorItem = hit.transform.gameObject.GetComponent<Item>();
-                        foreach (Slot slot in getAllSlots())
+                        foreach (Slot slot in game.GetAllSlots())
                         {
                             if (slot.Item == CursorItem)
                             {
                                 slot.Item = null;
                             }
                         }
-                        state = State.PlaceItem;
-                        //print("Item: " + hit.collider.name);
+                        game.State = State.PlaceItem;
                     }
                 }
             }
         }
-        else if (state == State.PlaceItem)
+        else if (game.State == State.PlaceItem)
         {
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, slotLayer))
@@ -77,7 +80,7 @@ public class GameController : MonoBehaviour
                             slot.Item = CursorItem;
                             CursorItem.transform.position = slot.transform.position;
                             CursorItem = null;
-                            state = State.TakeItem;
+                            game.State = State.TakeItem;
                         }
                     }
                 }
@@ -100,54 +103,6 @@ public class GameController : MonoBehaviour
         game.OtherPlayerData = otherPlayerData;
 
         // Check if the board data is same
-    }
-
-    private void PrepareBoard()
-    {
-        foreach (Slot slot in getAllSlots())
-        {
-            if (slot.Item != null)
-            {
-                Destroy(slot.Item.gameObject);
-                slot.Item = null;
-            }
-        }
-        
-        List<Slot> randomSlots = getRandomSlots(3);
-
-        foreach (Slot slot in randomSlots)
-        {
-            GameObject itemObj = Instantiate(itemPrefab);
-            slot.Item = itemObj.GetComponent<Item>();
-        }
-
-        state = State.TakeItem;
-    }
-
-    private List<Slot> getRandomSlots(int count)
-    {
-        List<Slot> randomSlots = new List<Slot>();
-        List<Slot> allSlots = getAllSlots();
-        while (randomSlots.Count < count)
-        {
-            Slot randomSlot = allSlots[Random.Range(0, allSlots.Count)];
-            if (!randomSlots.Contains(randomSlot))
-            {
-                randomSlots.Add(randomSlot);
-            }
-        }
-        return randomSlots;
-    }
-
-    private List<Slot> getAllSlots()
-    {
-        List<Slot> slots = new List<Slot>();
-        foreach (GameObject slotObj in GameObject.FindGameObjectsWithTag("Slot"))
-        {
-            Slot slot = slotObj.GetComponent<Slot>();
-            slots.Add(slot);
-        }
-        return slots;
     }
 }
 
