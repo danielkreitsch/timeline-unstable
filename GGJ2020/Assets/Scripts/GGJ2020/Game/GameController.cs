@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private Game game;
-    
+
     [SerializeField] private LayerMask slotLayer;
 
     [SerializeField] private LayerMask itemLayer;
@@ -19,10 +19,11 @@ public class GameController : MonoBehaviour
     [SerializeField] private int slotCount;
 
     [SerializeField] private int itemCount;
-    
+
     private Slot hoveringSlot;
     private Item hoveringItem;
     private Item _cursorItem;
+    private Slot oldSlot;
 
     public Item CursorItem
     {
@@ -41,27 +42,34 @@ public class GameController : MonoBehaviour
         {
             game.PrepareBoard(slotCount, itemCount);
         }
-        
+
         if (game.State == State.TakeItem)
         {
             RaycastHit hit;
             if (RaycastUtils.RaycastMouse(out hit, itemLayer))
             {
-                if (CursorItem == null)
+                hoveringItem = hit.transform.gameObject.GetComponent<Item>();
+            }
+            else
+            {
+                hoveringItem = null;
+            }
+
+            if (hoveringItem )
+            if (CursorItem == null)
+            {
+                if (Input.GetMouseButtonDown(0))
                 {
-                    if (Input.GetMouseButtonDown(0))
+                    CursorItem = hit.transform.gameObject.GetComponent<Item>();
+                    foreach (Slot slot in game.GetAllSlots())
                     {
-                            
-                        CursorItem = hit.transform.gameObject.GetComponent<Item>();
-                        foreach (Slot slot in game.GetAllSlots())
+                        if (slot.Item == CursorItem)
                         {
-                            if (slot.Item == CursorItem)
-                            {
-                                slot.Item = null;
-                            }
+                            oldSlot = slot;
+                            slot.Item = null;
                         }
-                        game.State = State.PlaceItem;
                     }
+                    game.State = State.PlaceItem;
                 }
             }
         }
@@ -70,17 +78,30 @@ public class GameController : MonoBehaviour
             RaycastHit hit;
             if (RaycastUtils.RaycastMouse(out hit, slotLayer))
             {
-                if (Input.GetMouseButtonDown(0))
+                Slot slot = hit.transform.gameObject.GetComponent<Slot>();
+                hoveringSlot = slot;
+            }
+            else
+            {
+                hoveringSlot = null;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (CursorItem != null)
                 {
-                    if (CursorItem != null)
+                    if (hoveringSlot != null)
                     {
-                        Slot slot = hit.transform.gameObject.GetComponent<Slot>();
-                        if (slot.IsEmpty())
+                        if (hoveringSlot.IsEmpty())
                         {
-                            slot.Item = CursorItem;
-                            game.State = State.TakeItem;
+                            game.PlaceItem(hoveringSlot, CursorItem);
                             CursorItem = null;
                         }
+                    }
+                    else
+                    {
+                        game.PlaceItem(oldSlot, CursorItem);
+                        CursorItem = null;
                     }
                 }
             }
