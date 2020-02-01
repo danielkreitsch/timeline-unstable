@@ -15,7 +15,6 @@ public class TcpServer : MonoBehaviour
 	private TcpListener tcpListener;
 	private byte[] buffer;
 
-	public string MasterIp = "127.0.0.1";
 	public int Port = 12345;
 
 	public bool SendData = false;
@@ -49,7 +48,7 @@ public class TcpServer : MonoBehaviour
 	{
 		try
 		{
-			tcpListener = new TcpListener(IPAddress.Parse(MasterIp), Port);
+			tcpListener = new TcpListener(IPAddress.Any, Port);
 			tcpListener.Start();
 			Debug.Log("Server is listening on " + MasterIp + ":" + Port);
 

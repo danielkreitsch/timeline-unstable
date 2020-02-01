@@ -57,9 +57,12 @@ public class TcpClientHandler : MonoBehaviour
     {
 	    try
 		{ 
-		    master = new TcpClient();
-		    master.Connect(IPAddress.Parse(MasterIp), Port);
-		    Debug.Log("Connected to Master");
+			while(!master.Connected)
+			{
+				master = new TcpClient();
+				master.Connect(IPAddress.Parse(MasterIp), Port);
+			}
+			Debug.Log("Connected to Master");
 
 			buffer = new byte[2048]; var stream = master.GetStream();
 
