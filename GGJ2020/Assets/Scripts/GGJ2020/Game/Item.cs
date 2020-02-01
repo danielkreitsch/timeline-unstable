@@ -5,12 +5,18 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    private const float smoothing = 30;
+    private const float smoothing = 20;
     private const float startY = 50;
     
     private string id;
     
-    public Vector3 targetPos;
+    private Vector3 targetPos;
+
+    public Vector3 TargetPos
+    {
+        get => targetPos;
+        set => targetPos = value;
+    }
 
     public void PlaySpawnAnimation()
     {

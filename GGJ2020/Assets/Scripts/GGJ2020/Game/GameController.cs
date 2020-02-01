@@ -124,7 +124,7 @@ public class GameController : MonoBehaviour
             if (RaycastUtils.RaycastMouse(out hit, boardLayer))
             {
                 Vector3 position = hit.point + cursorDisplacement;
-                CursorItem.targetPos = position;
+                CursorItem.TargetPos = position;
             }
         }
     }

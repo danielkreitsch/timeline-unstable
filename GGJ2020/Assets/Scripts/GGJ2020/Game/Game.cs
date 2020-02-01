@@ -7,7 +7,7 @@ public class Game : MonoBehaviour
 {
     [SerializeField] private Player myPlayer;
     
-    [SerializeField] private GameObject itemPrefab;
+    [SerializeField] private GameObject[] itemPrefabs;
 
     private PlayerDto otherPlayerData;
 
@@ -42,12 +42,15 @@ public class Game : MonoBehaviour
         }
         
         List<Slot> randomSlots = GetRandomSlots(items);
-
-        foreach (Slot slot in randomSlots)
+        List<GameObject> randomItemPrefabs = GetRandomItemPrefabs(items);
+        
+        for (int i = 0; i < items; i++)
         {
+            Slot slot = randomSlots[i];
+            GameObject itemPrefab = randomItemPrefabs[i];
             GameObject itemObj = Instantiate(itemPrefab);
+            itemObj.transform.position = slot.transform.position;
             slot.Item = itemObj.GetComponent<Item>();
-            slot.Item.transform.position = slot.transform.position;
             slot.Item.PlaySpawnAnimation();
         }
 
@@ -87,5 +90,19 @@ public class Game : MonoBehaviour
             }
         }
         return randomSlots;
+    }
+
+    public List<GameObject> GetRandomItemPrefabs(int count)
+    {
+        List<GameObject> randomPrefabs = new List<GameObject>();
+        while (randomPrefabs.Count < count)
+        {
+            GameObject randomPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
+            if (!randomPrefabs.Contains(randomPrefab))
+            {
+                randomPrefabs.Add(randomPrefab);
+            }
+        }
+        return randomPrefabs;
     }
 }
