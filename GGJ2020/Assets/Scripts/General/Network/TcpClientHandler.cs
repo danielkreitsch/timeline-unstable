@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -55,10 +56,14 @@ public class TcpClientHandler : MonoBehaviour
     void ClientListen()
     {
 	    try
-		{ 
-		    master = new TcpClient();
-		    master.Connect(MasterIp, Port);
-		    Debug.Log("Connected to Master");
+		{
+			while (!master.Connected)
+			{
+				master = new TcpClient();
+				master.Connect(MasterIp, Port);
+			}
+
+			Debug.Log("Connected to Master");
 
 			buffer = new byte[2048]; var stream = master.GetStream();
 
