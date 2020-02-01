@@ -8,101 +8,104 @@ using GGJ2020.Game;
 using UnityEngine;
 using UnityEngine.Events;
 
-
-public class TcpServer : MonoBehaviour
+namespace GGJ2020
 {
-	private TcpClient client;
-	private Thread serverThread;
-	private TcpListener tcpListener;
-	private byte[] buffer;
-	
-	public int Port = 12345;
-
-	public bool SendData = false;
-	
-	[SerializeField] private GameController gameController;
-	
-	// Start is called before the first frame update
-	void Start()
+	public class TcpServer : MonoBehaviour
 	{
-		serverThread = new Thread(MasterListen);
-		serverThread.IsBackground = true;
-		serverThread.Start();
-	}
+		private TcpClient client;
+		private Thread serverThread;
+		private TcpListener tcpListener;
+		private byte[] buffer;
 
-	// Update is called once per frame
-	void Update()
-	{
-		if (SendData)
+		public int Port = 12345;
+
+		public bool SendData = false;
+
+		[SerializeField] private GameController gameController;
+
+		// Start is called before the first frame update
+		void Start()
 		{
-			SendData = false;
-			var data = JsonUtility.ToJson(new PlayerDto());
-			MasterWrite(NetworkUtility.ToNetwork(new PlayerDto()));
-			Debug.Log("Master Sent: " + data);
+			serverThread = new Thread(MasterListen);
+			serverThread.IsBackground = true;
+			serverThread.Start();
 		}
-	}
 
-
-	void MasterListen()
-	{
-		try
+		// Update is called once per frame
+		void Update()
 		{
-			tcpListener = new TcpListener(IPAddress.Any, Port);
-			tcpListener.Start();
-			Debug.Log("Server is listening on port " + Port);
-
-			client = tcpListener.AcceptTcpClient();
-			var stream = client.GetStream();
-
-			buffer = new byte[2048];
-
-			while (true)
+			if (SendData)
 			{
-				if (!stream.CanRead)
-				{
-					Debug.Log("Master Cannot Read");
-					continue;
-				}
-				if (stream.DataAvailable)
-				{
-					int l = stream.Read(buffer, 0, buffer.Length);
-					Debug.Log("Master read " + l + "Bytes");
-					var rec = NetworkUtility.FromNetwork(Encoding.ASCII.GetString(buffer));
-					
-					Run.OnMainThread(() => gameController.OnReceivePacket(rec));
-				}
+				SendData = false;
+				var data = JsonUtility.ToJson(new PlayerDto());
+				MasterWrite(NetworkUtility.ToNetwork(new PlayerDto()));
+				Debug.Log("Master Sent: " + data);
 			}
 		}
-		catch (SocketException)
-		{
-			Debug.Log("Master Network error");
-		}
 
-	}
 
-	void MasterWrite(string message)
-	{
-		if (client == null)
+		void MasterListen()
 		{
-			Debug.Log("No Client connected.");
-			return;
-		}
-
-		try
-		{
-			var stream = client.GetStream();
-			if (!stream.CanWrite)
+			try
 			{
-				Debug.Log("Master Cannot write to stream");
+				tcpListener = new TcpListener(IPAddress.Any, Port);
+				tcpListener.Start();
+				Debug.Log("Server is listening on port " + Port);
+
+				client = tcpListener.AcceptTcpClient();
+				var stream = client.GetStream();
+
+				buffer = new byte[2048];
+
+				while (true)
+				{
+					if (!stream.CanRead)
+					{
+						Debug.Log("Master Cannot Read");
+						continue;
+					}
+					if (stream.DataAvailable)
+					{
+						int l = stream.Read(buffer, 0, buffer.Length);
+						//Debug.Log("Master read " + l + "Bytes");
+						string receivedString = Encoding.ASCII.GetString(buffer);
+						Debug.Log("Received: " + receivedString);
+						var rec = NetworkUtility.FromNetwork(receivedString);
+						Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+					}
+				}
+			}
+			catch (SocketException)
+			{
+				Debug.Log("Master Network error");
+			}
+
+		}
+
+		void MasterWrite(string message)
+		{
+			if (client == null)
+			{
+				Debug.Log("No Client connected.");
 				return;
 			}
 
-			byte[] messageBytes = Encoding.ASCII.GetBytes(message);
-			stream.Write(messageBytes, 0, messageBytes.Length);
-		}
-		catch (SocketException)
-		{
-			Debug.Log("Master Sending Failed");
+			try
+			{
+				var stream = client.GetStream();
+				if (!stream.CanWrite)
+				{
+					Debug.Log("Master Cannot write to stream");
+					return;
+				}
+
+				byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+				stream.Write(messageBytes, 0, messageBytes.Length);
+			}
+			catch (SocketException)
+			{
+				Debug.Log("Master Sending Failed");
+			}
 		}
 	}
 }
