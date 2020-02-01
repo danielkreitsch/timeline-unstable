@@ -137,7 +137,11 @@ public class GameController : MonoBehaviour
 
     public void OnReceivePacket(object packet)
     {
-        
+        Debug.Log("Received packet in game controller");
+        if (packet is PlayerDto)
+        {
+            Debug.Log("Received player data");
+        }
     }
 
     public void OnOtherPlayerDataReceive(PlayerDto otherPlayerData)
