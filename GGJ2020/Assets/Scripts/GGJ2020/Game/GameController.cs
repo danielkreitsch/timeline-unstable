@@ -102,13 +102,10 @@ public class GameController : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0))
             {
-                if (hoveringSlot != null)
+                if (hoveringSlot != null && hoveringSlot.IsEmpty())
                 {
-                    if (hoveringSlot.IsEmpty())
-                    {
-                        game.PlaceItem(hoveringSlot, CursorItem);
-                        CursorItem = null;
-                    }
+                    game.PlaceItem(hoveringSlot, CursorItem);
+                    CursorItem = null;
                 }
                 else
                 {

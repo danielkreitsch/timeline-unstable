@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1038,6 +1038,30 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1731563091}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1760932645 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1060919360788509052, guid: deb7f6c106022b54fb326b6fb4d6a08f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1060919361851232199}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1760932646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760932645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef7cb07ae871d64294c59ddc9c7299c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MasterIp: 192.168.43.207
+  Port: 12345
+  SendData: 0
+  OnRecieve:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1820710183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1429,7 +1453,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: TcpHandler
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1060919360788509051, guid: deb7f6c106022b54fb326b6fb4d6a08f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: deb7f6c106022b54fb326b6fb4d6a08f, type: 3}
 --- !u!1001 &2010872647336098174
 PrefabInstance:

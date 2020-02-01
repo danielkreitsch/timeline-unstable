@@ -57,7 +57,7 @@ public class TcpClientHandler : MonoBehaviour
 	    try
 		{ 
 		    master = new TcpClient();
-		    master.Connect(IPAddress.Parse(MasterIp), Port);
+		    master.Connect(MasterIp, Port);
 		    Debug.Log("Connected to Master");
 
 			buffer = new byte[2048]; var stream = master.GetStream();
@@ -81,9 +81,10 @@ public class TcpClientHandler : MonoBehaviour
 				}
 		    }
 	    }
-	    catch (SocketException)
+	    catch (SocketException ex)
 	    {
 			Debug.Log("Client Socket Error");
+			Debug.LogException(ex);
 	    }
     }
 
