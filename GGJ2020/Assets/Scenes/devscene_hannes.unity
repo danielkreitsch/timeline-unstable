@@ -148,12 +148,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 136633692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 082472abd1c04e546a5acbf79e0832f4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7cba9a48aa6062041b801e4af6e997e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MasterIp: 127.0.0.1
   Port: 12345
-  IsServer: 0
   SendData: 0
 --- !u!4 &136633694
 Transform:
@@ -178,12 +177,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 136633692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 082472abd1c04e546a5acbf79e0832f4, type: 3}
+  m_Script: {fileID: 11500000, guid: eef7cb07ae871d64294c59ddc9c7299c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MasterIp: 127.0.0.1
   Port: 12345
-  IsServer: 1
   SendData: 0
 --- !u!1 &1876676115
 GameObject:
