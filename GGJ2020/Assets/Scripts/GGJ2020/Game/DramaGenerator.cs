@@ -12,8 +12,8 @@ public class DramaGenerator : MonoBehaviour
 
     [SerializeField]
     float shakeInterval;
-    [SerializeField]
-    int shakesToIncreaseIntensity;
+    [SerializeField, Range(1, 20)]
+    int shakesToIncreaseIntensity = 10;
 
     // Start is called before the first frame update
     IEnumerator Start()
