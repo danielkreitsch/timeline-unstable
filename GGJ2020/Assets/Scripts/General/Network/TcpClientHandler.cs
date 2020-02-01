@@ -23,7 +23,7 @@ public class TcpClientHandler : MonoBehaviour
 	[SerializeField] private GameController gameController;
 
 	// Start is called before the first frame update
-	void Start()
+	void OnEnable()
 	{
 		try
 		{
