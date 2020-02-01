@@ -13,6 +13,8 @@ public class Game : MonoBehaviour
 
     private State state;
 
+    private float timer;
+
     public Player MyPlayer => myPlayer;
 
     public PlayerDto OtherPlayerData
@@ -26,7 +28,13 @@ public class Game : MonoBehaviour
         get => state;
         set => state = value;
     }
-    
+
+    public float Timer
+    {
+        get => timer;
+        set => timer = value;
+    }
+
     /**
      * Die Variable slots wird noch ignoriert
      */
