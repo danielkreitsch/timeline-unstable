@@ -13,13 +13,17 @@ public class visibleLog : MonoBehaviour
 	// Start is called before the first frame update
 	void OnEnable()
     {
-	    Application.logMessageReceived += HandleLog;
+	    //Application.logMessageReceived += HandleLog;
+	    Application.logMessageReceivedThreaded += HandleLog;
+		Debug.Log("Enablked Now");
     }
 
     void OnDisable()
     {
-	    Application.logMessageReceived -= HandleLog;
-    }
+	    Debug.Log("Disabled");
+	    //Application.logMessageReceived -= HandleLog;
+	    Application.logMessageReceivedThreaded -= HandleLog;
+	}
 
     void HandleLog(string logString, string stackTrace, LogType type)
     {
@@ -37,13 +41,10 @@ public class visibleLog : MonoBehaviour
 		    myLog += mylog;
 	    }
 
-	    var Text = GetComponent<Text>();
-	    Text.text = myLog;
-	    lines++;
-	    if (lines > 30)
-	    {
-		    lines = 0;
-		    Text.text = "";
-	    }
+		Run.OnMainThread(() => {
+			var Text = GetComponent<Text>();
+			Text.text = myLog;
+		});
+	    
     }
 }
