@@ -18,4 +18,9 @@ public class Slot : MonoBehaviour
             }
         }
     }
+
+    public bool IsEmpty()
+    {
+        return item == null;
+    }
 }

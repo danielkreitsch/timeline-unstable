@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using GGJ2020.Game;
-using UnityEditorInternal;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour

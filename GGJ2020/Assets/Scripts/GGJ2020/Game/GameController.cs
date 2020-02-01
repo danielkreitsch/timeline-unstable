@@ -45,7 +45,7 @@ public class GameController : MonoBehaviour
         if (game.State == State.TakeItem)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, itemLayer))
+            if (RaycastUtils.RaycastMouse(out hit, itemLayer))
             {
                 if (CursorItem == null)
                 {
@@ -68,19 +68,18 @@ public class GameController : MonoBehaviour
         else if (game.State == State.PlaceItem)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, slotLayer))
+            if (RaycastUtils.RaycastMouse(out hit, slotLayer))
             {
                 if (Input.GetMouseButtonDown(0))
                 {
                     if (CursorItem != null)
                     {
                         Slot slot = hit.transform.gameObject.GetComponent<Slot>();
-                        if (slot.Item == null)
+                        if (slot.IsEmpty())
                         {
                             slot.Item = CursorItem;
-                            CursorItem.transform.position = slot.transform.position;
-                            CursorItem = null;
                             game.State = State.TakeItem;
+                            CursorItem = null;
                         }
                     }
                 }
@@ -90,7 +89,7 @@ public class GameController : MonoBehaviour
         if (CursorItem != null)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, boardLayer))
+            if (RaycastUtils.RaycastMouse(out hit, boardLayer))
             {
                 Vector3 position = hit.point;
                 CursorItem.transform.position = position;
