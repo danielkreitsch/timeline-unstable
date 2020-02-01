@@ -54,7 +54,11 @@ public class Game : MonoBehaviour
 
     public void PlaceItem(Slot slot, Item item)
     {
-        
+        if (slot.IsEmpty())
+        {
+            slot.Item = item;
+            state = State.TakeItem;
+        }
     }
     
     public List<Slot> GetAllSlots()
