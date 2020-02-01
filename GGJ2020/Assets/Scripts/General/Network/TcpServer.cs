@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class TcpServer : MonoBehaviour
@@ -12,6 +13,7 @@ public class TcpServer : MonoBehaviour
 	private TcpClient client;
 	private Thread serverThread;
 	private TcpListener tcpListener;
+	private byte[] buffer;
 
 	public string MasterIp = "127.0.0.1";
 	public int Port = 12345;
@@ -19,7 +21,8 @@ public class TcpServer : MonoBehaviour
 	public bool SendData = false;
 	public game_state State = new game_state();
 
-	private byte[] buffer;
+	[SerializeField]
+	private RecEvent OnRecieve;
 
 	// Start is called before the first frame update
 	void Start()
@@ -36,10 +39,11 @@ public class TcpServer : MonoBehaviour
 		{
 			SendData = false;
 			var data = JsonUtility.ToJson(State);
-			MasterWrite(data);
+			MasterWrite(NetworkUtility.ToNetwork(State));
 			Debug.Log("Master Sent: " + data);
 		}
 	}
+
 
 	void MasterListen()
 	{
@@ -65,6 +69,11 @@ public class TcpServer : MonoBehaviour
 				{
 					int l = stream.Read(buffer, 0, buffer.Length);
 					Debug.Log("Master read " + l + "Bytes");
+					var rec = NetworkUtility.FromNetwork(Encoding.ASCII.GetString(buffer));
+
+
+					OnRecieve.Invoke(rec);
+
 				}
 			}
 		}
