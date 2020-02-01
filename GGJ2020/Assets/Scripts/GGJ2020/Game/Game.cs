@@ -47,6 +47,8 @@ public class Game : MonoBehaviour
         {
             GameObject itemObj = Instantiate(itemPrefab);
             slot.Item = itemObj.GetComponent<Item>();
+            slot.Item.transform.position = slot.transform.position;
+            slot.Item.PlaySpawnAnimation();
         }
 
         state = State.TakeItem;

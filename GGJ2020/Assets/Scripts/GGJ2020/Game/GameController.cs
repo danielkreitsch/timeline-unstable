@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using GGJ2020.Game;
 using UnityEngine;
@@ -22,7 +23,10 @@ public class GameController : MonoBehaviour
 
     private Slot hoveringSlot;
     private Item hoveringItem;
+
     private Item _cursorItem;
+    private Vector3 cursorDisplacement;
+
     private Slot oldSlot;
 
     public Item CursorItem
@@ -45,6 +49,11 @@ public class GameController : MonoBehaviour
 
         if (game.State == State.TakeItem)
         {
+            if (CursorItem != null)
+            {
+                throw new Exception("The cursor has an item but the game state is TakeItem");
+            }
+
             RaycastHit hit;
             if (RaycastUtils.RaycastMouse(out hit, itemLayer))
             {
@@ -55,11 +64,11 @@ public class GameController : MonoBehaviour
                 hoveringItem = null;
             }
 
-            if (hoveringItem )
-            if (CursorItem == null)
+            if (hoveringItem != null)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
+                    cursorDisplacement = new Vector3(hit.transform.position.x - hit.point.x, 0, hit.transform.position.z - hit.point.z);
                     CursorItem = hit.transform.gameObject.GetComponent<Item>();
                     foreach (Slot slot in game.GetAllSlots())
                     {
@@ -75,6 +84,11 @@ public class GameController : MonoBehaviour
         }
         else if (game.State == State.PlaceItem)
         {
+            if (CursorItem == null)
+            {
+                throw new Exception("The cursor has no item but the game state is PlaceItem");
+            }
+
             RaycastHit hit;
             if (RaycastUtils.RaycastMouse(out hit, slotLayer))
             {
@@ -88,21 +102,18 @@ public class GameController : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0))
             {
-                if (CursorItem != null)
+                if (hoveringSlot != null)
                 {
-                    if (hoveringSlot != null)
+                    if (hoveringSlot.IsEmpty())
                     {
-                        if (hoveringSlot.IsEmpty())
-                        {
-                            game.PlaceItem(hoveringSlot, CursorItem);
-                            CursorItem = null;
-                        }
-                    }
-                    else
-                    {
-                        game.PlaceItem(oldSlot, CursorItem);
+                        game.PlaceItem(hoveringSlot, CursorItem);
                         CursorItem = null;
                     }
+                }
+                else
+                {
+                    game.PlaceItem(oldSlot, CursorItem);
+                    CursorItem = null;
                 }
             }
         }
@@ -112,8 +123,8 @@ public class GameController : MonoBehaviour
             RaycastHit hit;
             if (RaycastUtils.RaycastMouse(out hit, boardLayer))
             {
-                Vector3 position = hit.point;
-                CursorItem.transform.position = position;
+                Vector3 position = hit.point + cursorDisplacement;
+                CursorItem.targetPos = position;
             }
         }
     }

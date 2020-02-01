@@ -14,7 +14,7 @@ public class Slot : MonoBehaviour
             item = value;
             if (item != null)
             {
-                item.transform.position = transform.position;
+                item.targetPos = transform.position;
             }
         }
     }
