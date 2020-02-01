@@ -10,19 +10,23 @@ using UnityEngine;
 using UnityEngine.Video;
 using Object = UnityEngine.Object;
 
-public class NetworkUtility : MonoBehaviour
+namespace GGJ2020
 {
-	public static object FromNetwork(string message)
+	public class NetworkUtility : MonoBehaviour
 	{
-		var classname = message.Substring(0, message.IndexOf(':'));
-		var data = message.Substring(message.IndexOf(':') + 1);
-		Type t = Type.GetType(classname);
-		return JsonUtility.FromJson(data, Type.GetType(classname));
-	}
+		public static object FromNetwork(string message)
+		{
+			var classname = message.Substring(0, message.IndexOf(':'));
+			var data = message.Substring(message.IndexOf(':') + 1);
+			Type t = Type.GetType(classname);
+			Debug.Log("Class name: " + classname + ", type: " + t);
+			return JsonUtility.FromJson(data, t);
+		}
 
 
-	public static string ToNetwork(object @object)
-	{
-		return @object.GetType().Name + ":" + JsonUtility.ToJson(@object);
+		public static string ToNetwork(object @object)
+		{
+			return @object.GetType().Name + ":" + JsonUtility.ToJson(@object);
+		}
 	}
 }
