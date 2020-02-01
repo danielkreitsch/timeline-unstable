@@ -71,7 +71,7 @@ public class TcpServer : MonoBehaviour
 					var rec = NetworkUtility.FromNetwork(Encoding.ASCII.GetString(buffer));
 
 
-					OnRecieve.Invoke(rec);
+					Run.OnMainThread(() => OnRecieve.Invoke(rec));
 
 				}
 			}
