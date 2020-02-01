@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using GGJ2020.Game;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,7 +19,6 @@ public class TcpServer : MonoBehaviour
 	public int Port = 12345;
 
 	public bool SendData = false;
-	public game_state State = new game_state();
 
 	[SerializeField]
 	private RecEvent OnRecieve;
@@ -37,8 +37,8 @@ public class TcpServer : MonoBehaviour
 		if (SendData)
 		{
 			SendData = false;
-			var data = JsonUtility.ToJson(State);
-			MasterWrite(NetworkUtility.ToNetwork(State));
+			var data = JsonUtility.ToJson(new PlayerDto());
+			MasterWrite(NetworkUtility.ToNetwork(new PlayerDto()));
 			Debug.Log("Master Sent: " + data);
 		}
 	}
