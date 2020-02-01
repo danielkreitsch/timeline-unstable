@@ -49,6 +49,10 @@ public class TcpClientHandler : MonoBehaviour
 		}
 	}
 
+	public void SetHostname(string NewText)
+	{
+		MasterIp = NewText;
+	}
 
 	void ClientListen()
 	{
