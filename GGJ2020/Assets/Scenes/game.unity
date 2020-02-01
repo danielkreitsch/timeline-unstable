@@ -1105,7 +1105,7 @@ MonoBehaviour:
   MasterIp: 127.0.0.1
   Port: 12345
   SendData: 0
-  gameController: {fileID: 0}
+  gameController: {fileID: 1811469537}
 --- !u!114 &1811469537 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2010872647832110055, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
