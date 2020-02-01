@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading;
 using UnityEngine;
@@ -11,28 +12,54 @@ public class tcp_client : MonoBehaviour
 	#region private members 	
 	private TcpClient socketConnection;
 	private Thread clientReceiveThread;
+
+	private TcpListener tcpListener;
+	private Thread tcpListenerThread;
+	private TcpClient connectedTcpClient;
+
+	private bool data_recieved = false;
+	Byte[] rec_data;
 	#endregion
+
 	public string master_ip = "127.0.0.1";
 	public int port = 12345;
+	public bool is_server = false;
+
 	public bool send_data = false;
 	public game_state state = new game_state();
-	public bool is_client = true;
+
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		ConnectToTcpServer();
+		if(is_server)
+			StartTcpServer();
+		else
+			ConnectToTcpServer();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (send_data)
+		if (is_server)
 		{
-			send_data = false;
-			var data = JsonUtility.ToJson(state);
-			Debug.Log(data);
-			SendMessage(data);
+			if (data_recieved)
+			{
+				data_recieved = false;
+				var data = Encoding.ASCII.GetString(rec_data);
+				game_state client_state = JsonUtility.FromJson<game_state>(data);
+				Debug.Log("Recieved: " + data);
+			}
+		}
+		else
+		{
+			if (send_data)
+			{
+				send_data = false;
+				var data = JsonUtility.ToJson(state);
+				Debug.Log("Sent: " + data);
+				SendMessage(data);
+			}
 		}
 	}
 
@@ -105,5 +132,53 @@ public class tcp_client : MonoBehaviour
 			Debug.Log("Socket exception: " + socketException);
 		}
 	}
+
+	private void StartTcpServer()
+	{
+		tcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
+		tcpListenerThread.IsBackground = true;
+		tcpListenerThread.Start();
+	}
+
+
+	private void ListenForIncommingRequests()
+	{
+		try
+		{		
+			tcpListener = new TcpListener(IPAddress.Parse(master_ip), port);
+			tcpListener.Start();
+			Debug.Log("Server is listening");
+			rec_data = new Byte[1024];
+			while (true)
+			{
+				using (connectedTcpClient = tcpListener.AcceptTcpClient())
+				{
+					// Get a stream object for reading 					
+					using (NetworkStream stream = connectedTcpClient.GetStream())
+					{
+						int length;
+						// Read incomming stream into byte arrary. 						
+						while ((length = stream.Read(rec_data, 0, rec_data.Length)) != 0)
+						{
+							var incommingData = new byte[length];
+							Array.Copy(rec_data, 0, incommingData, 0, length);
+							// Convert byte array to string message. 							
+							string clientMessage = Encoding.ASCII.GetString(incommingData);
+							Debug.Log("client message received as: " + clientMessage);
+							data_recieved = true;
+						}
+					}
+				}
+			}
+		}
+		catch (SocketException socketException)
+		{
+			Debug.Log("SocketException " + socketException.ToString());
+		}
+	}
+
+
+
+
 
 }
