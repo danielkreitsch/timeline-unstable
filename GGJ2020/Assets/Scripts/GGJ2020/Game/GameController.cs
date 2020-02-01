@@ -126,6 +126,11 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void OnReceivePacket(object packet)
+    {
+        
+    }
+
     public void OnOtherPlayerDataReceive(PlayerDto otherPlayerData)
     {
         game.OtherPlayerData = otherPlayerData;
