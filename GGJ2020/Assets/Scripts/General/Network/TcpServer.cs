@@ -19,10 +19,9 @@ public class TcpServer : MonoBehaviour
 	public int Port = 12345;
 
 	public bool SendData = false;
-
-	[SerializeField]
-	private RecEvent OnRecieve;
-
+	
+	[SerializeField] private GameController gameController;
+	
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -69,10 +68,8 @@ public class TcpServer : MonoBehaviour
 					int l = stream.Read(buffer, 0, buffer.Length);
 					Debug.Log("Master read " + l + "Bytes");
 					var rec = NetworkUtility.FromNetwork(Encoding.ASCII.GetString(buffer));
-
-
-					Run.OnMainThread(() => OnRecieve.Invoke(rec));
-
+					
+					Run.OnMainThread(() => gameController.OnReceivePacket(rec));
 				}
 			}
 		}

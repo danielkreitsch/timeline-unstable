@@ -140,12 +140,13 @@ public class GameController : MonoBehaviour
         Debug.Log("Received packet in game controller");
         if (packet is PlayerDto)
         {
-            Debug.Log("Received player data");
+            OnOtherPlayerDataReceive((PlayerDto) packet);
         }
     }
 
     public void OnOtherPlayerDataReceive(PlayerDto otherPlayerData)
     {
+        Debug.Log("Received player data");
         game.OtherPlayerData = otherPlayerData;
 
         // Check if the board data is same

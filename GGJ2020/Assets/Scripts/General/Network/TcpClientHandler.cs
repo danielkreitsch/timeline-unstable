@@ -20,10 +20,7 @@ public class TcpClientHandler : MonoBehaviour
 
 	public bool SendData = false;
 
-	[SerializeField]
-	private RecEvent OnRecieve;
-
-
+	[SerializeField] private GameController gameController;
 
 	// Start is called before the first frame update
 	void Start()
@@ -82,7 +79,7 @@ public class TcpClientHandler : MonoBehaviour
 					Debug.Log("Client read " + l + "Bytes");
 					var rec = NetworkUtility.FromNetwork(Encoding.ASCII.GetString(buffer));
 
-					Run.OnMainThread(() => OnRecieve.Invoke(rec));
+					Run.OnMainThread(() => gameController.OnReceivePacket(rec));
 				}
 			}
 		}
