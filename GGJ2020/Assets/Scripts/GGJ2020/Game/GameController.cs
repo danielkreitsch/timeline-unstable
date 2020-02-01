@@ -42,6 +42,15 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        if (game.Timer >= 20)
+        {
+            game.Timer = 20;
+        }
+        else
+        {
+            game.Timer += Time.deltaTime;
+        }
+        
         if (Input.GetKeyDown(KeyCode.R))
         {
             game.PrepareBoard(slotCount, itemCount);
@@ -124,6 +133,11 @@ public class GameController : MonoBehaviour
                 CursorItem.TargetPos = position;
             }
         }
+    }
+
+    public void OnReceivePacket(object packet)
+    {
+        
     }
 
     public void OnOtherPlayerDataReceive(PlayerDto otherPlayerData)
