@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -323,22 +323,34 @@ PrefabInstance:
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
+        type: 3}
+      propertyPath: m_text
+      value: '20:000
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81c0224799dcd674ea6bd330a1bdf75c, type: 3}
@@ -1528,7 +1540,7 @@ PrefabInstance:
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
       propertyPath: itemPrefabs.Array.size
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
@@ -1558,6 +1570,24 @@ PrefabInstance:
       propertyPath: itemPrefabs.Array.data[2]
       value: 
       objectReference: {fileID: 4648768069802827093, guid: 1dbd6b5844c77b1429de60fb9f4a7a5a,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: itemPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 6180816901234428196, guid: 213d207ed4eee9c4ea8bffa3c24bc69c,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: itemPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 6323640246145635885, guid: d227be1dcccf4744eb0e632a88f8a843,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: itemPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 127927896268473755, guid: f1a8963972deabe46adb17c5d1d25d84,
         type: 3}
     - target: {fileID: 2010872647832110053, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
