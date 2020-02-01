@@ -18,7 +18,7 @@ namespace GGJ2020
 		{
 			var classname = message.Substring(0, message.IndexOf(':'));
 			var data = message.Substring(message.IndexOf(':') + 1);
-			Type t = Type.GetType(classname);
+			Type t = Type.GetType("GGJ2020." + classname);
 			Debug.Log("Class name: " + classname + ", type: " + t);
 			return JsonUtility.FromJson(data, t);
 		}
