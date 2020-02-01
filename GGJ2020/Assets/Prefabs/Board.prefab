@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5833188413731730301}
   - component: {fileID: 3775435268307663622}
   - component: {fileID: 6549482944439721139}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8900811293369266860}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 16, y: 1, z: 12}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -48,15 +48,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 7258888008041922788, guid: 34b836df087a1b24b86c4afaffa09587,
     type: 3}
-  slotPositions:
-  - {x: -3, y: -3}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
 --- !u!33 &5833188413731730301
 MeshFilter:
   m_ObjectHideFlags: 0
