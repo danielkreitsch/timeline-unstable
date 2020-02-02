@@ -1,27 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using GGJ2020;
 using GGJ2020.Game;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
     [SerializeField] private Player myPlayer;
+
+    [SerializeField] private GameObject[] randomSlotPresetPrefabs;
     
     [SerializeField] private GameObject[] itemPrefabs;
 
-    private PlayerDto otherPlayerData;
-
+    public UnityEvent onCountdownStart;
+    
+    public GameObject postGameForm;
+    
     private State state;
 
     private float timer;
 
-    public Player MyPlayer => myPlayer;
+    private bool running;
 
-    public PlayerDto OtherPlayerData
-    {
-        get => otherPlayerData;
-        set => otherPlayerData = value;
-    }
+    public UnityEvent onGameStart;
+    
+    public UnityEvent onGameWon;
+
+    public UnityEvent onGameLost;
+
+    public Player MyPlayer => myPlayer;
 
     public State State
     {
@@ -35,34 +46,44 @@ public class Game : MonoBehaviour
         set => timer = value;
     }
 
-    /**
-     * Die Variable slots wird noch ignoriert
-     */
-    public void PrepareBoard(int slots, int items)
+    public bool Running
     {
-        foreach (Slot slot in GetAllSlots())
-        {
-            if (slot.Item != null)
-            {
-                Destroy(slot.Item.gameObject);
-                slot.Item = null;
-            }
-        }
+        get => running;
+        set => running = value;
+    }
+
+    public void PrepareBoard()
+    {
+        myPlayer.Board.GenerateSlots(GetRandomSlotsPresetPrefab());
+    }
+
+    public void StartGame(List<int> itemIds)
+    {
+        StartCoroutine(CStartGame(itemIds));
+    }
+    IEnumerator CStartGame(List<int> itemIds)
+    {
+        onCountdownStart.Invoke();
+        yield return new WaitForSeconds(3);
         
-        List<Slot> randomSlots = GetRandomSlots(items);
-        List<GameObject> randomItemPrefabs = GetRandomItemPrefabs(items);
+        List<Slot> randomSlots = GetRandomSlots(itemIds.Count);
         
-        for (int i = 0; i < items; i++)
+        for (int i = 0; i < itemIds.Count; i++)
         {
+            yield return new WaitForSeconds(0.25f);
             Slot slot = randomSlots[i];
-            GameObject itemPrefab = randomItemPrefabs[i];
+            int itemId = itemIds[i];
+            GameObject itemPrefab = itemPrefabs.First(p => p.GetComponent<Item>().Id == itemId);
             GameObject itemObj = Instantiate(itemPrefab);
             itemObj.transform.position = slot.transform.position;
             slot.Item = itemObj.GetComponent<Item>();
             slot.Item.PlaySpawnAnimation();
         }
 
+        running = true;
         state = State.TakeItem;
+        
+        onGameStart.Invoke();
     }
 
     public void PlaceItem(Slot slot, Item item)
@@ -73,24 +94,28 @@ public class Game : MonoBehaviour
             state = State.TakeItem;
         }
     }
-    
+
     public List<Slot> GetAllSlots()
     {
-        List<Slot> slots = new List<Slot>();
+        /*List<Slot> slots = new List<Slot>();
         foreach (GameObject slotObj in GameObject.FindGameObjectsWithTag("Slot"))
         {
             Slot slot = slotObj.GetComponent<Slot>();
             slots.Add(slot);
         }
-        return slots;
+        Debug.Log("GetAllSlots() -> " + slots.Count);
+        return slots;*/
+        return myPlayer.Board.Slots;
     }
-        
+
     public List<Slot> GetRandomSlots(int count)
     {
         List<Slot> randomSlots = new List<Slot>();
         List<Slot> allSlots = GetAllSlots();
-        while (randomSlots.Count < count)
+        int loopCount = 0;
+        while (randomSlots.Count < count && loopCount < 100)
         {
+            loopCount++;
             Slot randomSlot = allSlots[Random.Range(0, allSlots.Count)];
             if (!randomSlots.Contains(randomSlot))
             {
@@ -98,6 +123,11 @@ public class Game : MonoBehaviour
             }
         }
         return randomSlots;
+    }
+
+    public GameObject GetRandomSlotsPresetPrefab()
+    {
+        return randomSlotPresetPrefabs[Random.Range(0, randomSlotPresetPrefabs.Length)];
     }
 
     public List<GameObject> GetRandomItemPrefabs(int count)
@@ -112,5 +142,66 @@ public class Game : MonoBehaviour
             }
         }
         return randomPrefabs;
+    }
+    
+    public List<int> GetRandomItemIds(int count)
+    {
+        List<int> randomIds = new List<int>();
+        while (randomIds.Count < count)
+        {
+            GameObject randomPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
+            int randomId = randomPrefab.GetComponent<Item>().Id;
+            if (!randomIds.Contains(randomId))
+            {
+                randomIds.Add(randomId);
+            }
+        }
+        return randomIds;
+    }
+
+    public void EndGame(bool won)
+    {
+        if (!running)
+        {
+            Debug.LogWarning("Can't end game again.");
+            return;
+        }
+        
+        if (won)
+        {
+            onGameWon.Invoke();
+        }
+        else
+        {
+            onGameLost.Invoke();
+        }
+
+        running = false;
+
+        if (Tcp.Type == TcpType.None || Tcp.Type == TcpType.Server)
+        {
+            StartCoroutine(CEndGame());
+        }
+    }
+
+    IEnumerator CEndGame()
+    {
+        /*float extraTimer = 0;
+        while (timer + extraTimer < 20)
+        {
+            yield return new WaitForEndOfFrame();
+            extraTimer += Time.deltaTime;
+        }*/
+        yield return new WaitForSeconds(7);
+        if (Tcp.Peer != null)
+        {
+            Tcp.Peer.SendPacket(new RestartGamePacket());
+        }
+        postGameForm.SetActive(true);
+    }
+
+    public void LoadGameScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

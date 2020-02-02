@@ -5,42 +5,41 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using GGJ2020.Game;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace GGJ2020
 {
-    public class TcpServer : MonoBehaviour
+    public class TcpServer : TcpPeer
     {
-        private TcpClient client;
+        private System.Net.Sockets.TcpClient client;
         private Thread serverThread;
         private TcpListener tcpListener;
         private byte[] buffer;
 
         public int Port = 12345;
 
-        public bool SendData = false;
-
-        [SerializeField] private GameController gameController;
+        private void Start()
+        {
+            if (Tcp.Peer != null)
+            {
+                Destroy(Tcp.Peer.gameObject);
+            }
+            DontDestroyOnLoad(gameObject);
+        }
 
         // Start is called before the first frame update
-        void OnEnable()
+        public void Init()
         {
             serverThread = new Thread(MasterListen);
             serverThread.IsBackground = true;
             serverThread.Start();
         }
 
-        // Update is called once per frame
-        void Update()
+        public override void SendPacket(object packet)
         {
-            if (SendData)
-            {
-                SendData = false;
-                var data = JsonUtility.ToJson(new PlayerDto());
-                MasterWrite(NetworkUtility.ToNetwork(new PlayerDto()));
-                Debug.Log("Master Sent: " + data);
-            }
+            MasterWrite(NetworkUtility.ToNetwork(packet));
         }
 
         void MasterListen()
@@ -53,30 +52,30 @@ namespace GGJ2020
 
                 client = tcpListener.AcceptTcpClient();
                 var stream = client.GetStream();
+                var streamReader = new StreamReader(stream);
 
                 buffer = new byte[2048];
 
                 while (true)
                 {
-                    if (!stream.CanRead)
+                    string receivedString = streamReader.ReadLine();
+                    Debug.Log("Received: " + receivedString);
+                    var rec = NetworkUtility.FromNetwork(receivedString);
+
+                    if (rec != null)
                     {
-                        Debug.Log("Master Cannot Read");
-                        continue;
+                        Run.OnMainThread(() => Tcp.OnReceivePacket(rec));
                     }
-                    if (stream.DataAvailable)
+                    else
                     {
-                        int l = stream.Read(buffer, 0, buffer.Length);
-                        //Debug.Log("Master read " + l + "Bytes");
-                        string receivedString = Encoding.ASCII.GetString(buffer);
-                        Debug.Log("Received: " + receivedString);
-                        var rec = NetworkUtility.FromNetwork(receivedString);
-                        Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+                        Debug.LogWarning("Packet deserialization didn't work: " + receivedString);
                     }
                 }
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
                 Debug.Log("Master Network error");
+                Debug.LogException(ex);
             }
         }
 
@@ -97,8 +96,11 @@ namespace GGJ2020
                     return;
                 }
 
-                byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+                Debug.Log("Sent: " + message);
+
+                byte[] messageBytes = Encoding.UTF8.GetBytes(message + "\n");
                 stream.Write(messageBytes, 0, messageBytes.Length);
+                stream.Flush();
             }
             catch (SocketException)
             {

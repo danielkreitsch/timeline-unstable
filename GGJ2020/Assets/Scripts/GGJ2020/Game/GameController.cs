@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using GGJ2020;
 using GGJ2020.Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private Game game;
+    [SerializeField] private bool offlineMode = false;
 
+    [SerializeField] private bool autoWin;
+
+    [SerializeField] private Game game;
+    
     [SerializeField] private LayerMask slotLayer;
 
     [SerializeField] private LayerMask itemLayer;
 
     [SerializeField] private LayerMask boardLayer;
-
-    /**
-     * Wird noch ignoriert (noch nicht implementiert)
-     */
-    [SerializeField] private int slotCount;
-
+    
     [SerializeField] private int itemCount;
 
     private Slot hoveringSlot;
@@ -37,23 +38,43 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        game.PrepareBoard(slotCount, itemCount);
+        if (offlineMode)
+        {
+            game.PrepareBoard();
+            game.StartGame(game.GetRandomItemIds(itemCount));
+        }
+        else
+        {
+            if (Tcp.Type == TcpType.Client)
+            {
+                List<int> itemIds = game.GetRandomItemIds(itemCount);
+                
+                game.PrepareBoard();
+                game.StartGame(itemIds);
+                
+                Tcp.Peer.SendPacket(game.MyPlayer.CreateStartGamePacket(itemIds));
+            }
+        }
     }
 
     void Update()
     {
-        if (game.Timer >= 20)
+        if (game.Running)
         {
-            game.Timer = 20;
+            if (game.Timer >= 20)
+            {
+                game.Timer = 20;
+                game.EndGame(autoWin);
+            }
+            else
+            {
+                game.Timer += Time.deltaTime;
+            }
         }
-        else
-        {
-            game.Timer += Time.deltaTime;
-        }
-        
+
         if (Input.GetKeyDown(KeyCode.R))
         {
-            game.PrepareBoard(slotCount, itemCount);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         if (game.State == State.TakeItem)
@@ -115,11 +136,19 @@ public class GameController : MonoBehaviour
                 {
                     game.PlaceItem(hoveringSlot, CursorItem);
                     CursorItem = null;
+                    if (!offlineMode)
+                    {
+                        SendItemsData();
+                    }
                 }
                 else
                 {
                     game.PlaceItem(oldSlot, CursorItem);
                     CursorItem = null;
+                    if (!offlineMode)
+                    {
+                        SendItemsData();
+                    }
                 }
             }
         }
@@ -135,21 +164,77 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void OnReceivePacket(object packet)
+    public void OnStartGamePacketReceive(StartGamePacket packet)
     {
-        Debug.Log("Received packet in game controller");
-        if (packet is PlayerDto)
+        foreach (SlotDto slotDto in packet.board.slots)
         {
-            OnOtherPlayerDataReceive((PlayerDto) packet);
+            game.MyPlayer.Board.AddSlotFromDto(slotDto);
+        }
+
+        game.StartGame(packet.itemIds);
+    }
+
+    public void OnRestartGamePacketReceive(RestartGamePacket packet)
+    {
+        game.postGameForm.SetActive(true);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void OnItemsDataPacketReceive(ItemsDataPacket packet)
+    {
+        bool equal = true;
+        foreach (Slot slot in game.MyPlayer.Board.Slots)
+        {
+            if (slot.Item != null)
+            {
+                bool found = false;
+                foreach (ItemDto itemDto in packet.items)
+                {
+                    if (itemDto.id == slot.Item.Id && itemDto.slotId == slot.Id)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    equal = false;
+                    break;
+                }
+            }
+        }
+
+        if (equal)
+        {
+            bool won = true;
+            game.EndGame(won);
+            Tcp.Peer.SendPacket(new EndGamePacket(won));
+        }
+        else
+        {
+            Debug.Log("not equal");
         }
     }
 
-    public void OnOtherPlayerDataReceive(PlayerDto otherPlayerData)
+    public void OnEndGamePacketReceive(EndGamePacket packet)
     {
-        Debug.Log("Received player data");
-        game.OtherPlayerData = otherPlayerData;
+        game.EndGame(packet.won);
+    }
 
-        // Check if the board data is same
+    public void SendItemsData()
+    {
+        ItemsDataPacket packet = new ItemsDataPacket();
+        foreach (Slot slot in game.MyPlayer.Board.Slots)
+        {
+            if (slot.Item != null)
+            {
+                ItemDto itemDto = new ItemDto();
+                itemDto.id = slot.Item.Id;
+                itemDto.slotId = slot.Id;
+                packet.items.Add(itemDto);
+            }
+        }
+        Tcp.Peer.SendPacket(packet);
     }
 }
 
