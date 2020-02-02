@@ -13,10 +13,10 @@ using UnityEngine.Events;
 
 namespace GGJ2020
 {
-	public class TcpClientHandler : TcpPeer
+	public class TcpClient : TcpPeer
 	{
 		private Thread clientThread;
-		private TcpClient master;
+		private System.Net.Sockets.TcpClient master;
 		private byte[] buffer;
 
 		public string MasterIp = "127.0.0.1";
@@ -73,7 +73,7 @@ namespace GGJ2020
 			{
 				do
 				{
-					master = new TcpClient();
+					master = new System.Net.Sockets.TcpClient();
 					master.Connect(MasterIp, Port);
 				} while (!master.Connected);
 

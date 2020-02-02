@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            if (tcpPeer is TcpClientHandler)
+            if (tcpPeer is TcpClient)
             {
                 game.PrepareBoard(slotCount);
                 SendBoardData();
@@ -140,13 +140,19 @@ public class GameController : MonoBehaviour
                 {
                     game.PlaceItem(hoveringSlot, CursorItem);
                     CursorItem = null;
-                    SendItemsData();
+                    if (!offlineMode)
+                    {
+                        SendItemsData();
+                    }
                 }
                 else
                 {
                     game.PlaceItem(oldSlot, CursorItem);
                     CursorItem = null;
-                    SendItemsData();
+                    if (!offlineMode)
+                    {
+                        SendItemsData();
+                    }
                 }
             }
         }

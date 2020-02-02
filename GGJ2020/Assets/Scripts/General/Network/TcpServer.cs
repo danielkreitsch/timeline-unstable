@@ -13,7 +13,7 @@ namespace GGJ2020
 {
     public class TcpServer : TcpPeer
     {
-        private TcpClient client;
+        private System.Net.Sockets.TcpClient client;
         private Thread serverThread;
         private TcpListener tcpListener;
         private byte[] buffer;
