@@ -13,7 +13,11 @@ public class JoinForm : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (!inputField.isFocused)
+        {
+            inputField.Select();
+            Debug.Log("select field");
+        }
     }
 
     // Update is called once per frame
@@ -34,10 +38,5 @@ public class JoinForm : MonoBehaviour
             Tcp.MasterIp = ip;
             Tcp.StartTcp(TcpType.Client);
         }
-    }
-
-    public void OnEnable()
-    {
-        inputField.Select();
     }
 }

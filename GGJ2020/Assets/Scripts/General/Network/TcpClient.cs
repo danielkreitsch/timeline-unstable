@@ -31,11 +31,6 @@ namespace GGJ2020
 				clientThread = new Thread(ClientListen);
 				clientThread.IsBackground = true;
 				clientThread.Start();
-
-				if (SceneManager.GetActiveScene().name == "main_menu")
-				{
-					SceneManager.LoadScene("game");
-				}
 			}
 			catch (SocketException e)
 			{
@@ -63,6 +58,14 @@ namespace GGJ2020
 				} while (!master.Connected);
 
 				Debug.Log("Connected to Master");
+				
+				Run.OnMainThread(() =>
+				{
+					if (SceneManager.GetActiveScene().name == "main_menu")
+					{
+						SceneManager.LoadScene("game");
+					}
+				});
 
 				var stream = master.GetStream();
 				var streamReader = new StreamReader(stream);

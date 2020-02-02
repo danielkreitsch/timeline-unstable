@@ -12,7 +12,7 @@ namespace GGJ2020.Game
 
         private string masterIp;
         private TcpPeer peer;
-        private TcpType type;
+        private TcpType type = TcpType.None;
 
         public static string MasterIp
         {
@@ -84,6 +84,7 @@ namespace GGJ2020.Game
     public enum TcpType
     {
         Server,
-        Client
+        Client,
+        None
     }
 }

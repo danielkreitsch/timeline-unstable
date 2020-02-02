@@ -16,6 +16,8 @@ public class Game : MonoBehaviour
     
     [SerializeField] private GameObject[] itemPrefabs;
 
+    public GameObject postGameForm;
+    
     private State state;
 
     private float timer;
@@ -171,7 +173,7 @@ public class Game : MonoBehaviour
 
         running = false;
 
-        if (Tcp.Type == TcpType.Server)
+        if (Tcp.Type == TcpType.None || Tcp.Type == TcpType.Server)
         {
             StartCoroutine(CEndGame());
         }
@@ -187,6 +189,7 @@ public class Game : MonoBehaviour
         }*/
         yield return new WaitForSeconds(7);
         Tcp.Peer.SendPacket(new RestartGamePacket());
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        postGameForm.SetActive(true);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

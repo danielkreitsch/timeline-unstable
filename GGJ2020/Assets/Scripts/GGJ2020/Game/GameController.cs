@@ -176,7 +176,8 @@ public class GameController : MonoBehaviour
 
     public void OnRestartGamePacketReceive(RestartGamePacket packet)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        game.postGameForm.SetActive(true);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnItemsDataPacketReceive(ItemsDataPacket packet)
@@ -211,7 +212,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Debug.Log("NOT EQUAL");
+            Debug.Log("not equal");
         }
     }
 
