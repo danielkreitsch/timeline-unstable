@@ -21,11 +21,7 @@ namespace GGJ2020
 
 		public string MasterIp = "127.0.0.1";
 		public int Port = 12345;
-
-		public bool SendData = false;
-
-		[SerializeField] private GameController gameController;
-
+		
 		// Start is called before the first frame update
 		void OnEnable()
 		{
@@ -40,19 +36,7 @@ namespace GGJ2020
 				Debug.Log("On client connect exception " + e);
 			}
 		}
-
-		// Update is called once per frame
-		void Update()
-		{
-			if (SendData)
-			{
-				SendData = false;
-				var packet = new ReadyPacket();
-				packet.message = "hallo welt";
-				SendPacket(packet);
-			}
-		}
-
+		
 		public override void SendPacket(object packet)
 		{
 			ClientWrite(NetworkUtility.ToNetwork(packet));
@@ -61,11 +45,6 @@ namespace GGJ2020
 		public void SetHostname(string NewText)
 		{
 			MasterIp = NewText;
-		}
-
-		public void SetSend()
-		{
-			SendData = true;
 		}
 		void ClientListen()
 		{
@@ -92,7 +71,7 @@ namespace GGJ2020
 
 					if (rec != null)
 					{
-						Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+						Run.OnMainThread(() => Tcp.OnReceivePacket(rec));
 					}
 					else
 					{

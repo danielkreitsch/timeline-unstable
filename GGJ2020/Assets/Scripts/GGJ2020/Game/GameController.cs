@@ -13,9 +13,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private bool autoWin;
 
     [SerializeField] private Game game;
-
-    [SerializeField] private TcpPeer tcpPeer;
-
+    
     [SerializeField] private LayerMask slotLayer;
 
     [SerializeField] private LayerMask itemLayer;
@@ -52,10 +50,11 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            if (tcpPeer is TcpClient)
+            if (Tcp.Type == TcpType.Client)
             {
                 game.PrepareBoard(slotCount);
-                SendBoardData();
+                Tcp.Peer.SendPacket(game.MyPlayer.CreateStartGamePacket());
+                game.StartGame(itemCount);
             }
         }
     }
@@ -168,23 +167,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void OnReceivePacket(object packet)
-    {
-        //Debug.Log("Received packet in game controller");
-        if (packet is StartGamePacket)
-        {
-            OnStartGamePacketReceive((StartGamePacket) packet);
-        }
-        else if (packet is ItemsDataPacket)
-        {
-            OnItemsDataPacketReceive((ItemsDataPacket) packet);
-        }
-        else if (packet is EndGamePacket)
-        {
-            OnEndGamePacketReceive((EndGamePacket) packet);
-        }
-    }
-
     public void OnStartGamePacketReceive(StartGamePacket packet)
     {
         foreach (SlotDto slotDto in packet.board.slots)
@@ -223,7 +205,7 @@ public class GameController : MonoBehaviour
         {
             bool won = true;
             game.EndGame(won);
-            tcpPeer.SendPacket(new EndGamePacket(won));
+            Tcp.Peer.SendPacket(new EndGamePacket(won));
         }
         else
         {
@@ -234,13 +216,6 @@ public class GameController : MonoBehaviour
     public void OnEndGamePacketReceive(EndGamePacket packet)
     {
         game.EndGame(packet.won);
-    }
-
-    public void SendBoardData()
-    {
-        Debug.Log("Send my board data");
-        tcpPeer.SendPacket(game.MyPlayer.ToDto());
-        game.StartGame(itemCount);
     }
 
     public void SendItemsData()
@@ -256,7 +231,7 @@ public class GameController : MonoBehaviour
                 packet.items.Add(itemDto);
             }
         }
-        tcpPeer.SendPacket(packet);
+        Tcp.Peer.SendPacket(packet);
     }
 }
 

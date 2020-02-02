@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5117071665702599460}
   - component: {fileID: 5117071665702599459}
+  - component: {fileID: 545816461}
   m_Layer: 0
-  m_Name: MainThreadDispatcher
+  m_Name: Singleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,3 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfe3de35f18d4554bbc948d15a99c934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &545816461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5117071665702599458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7c3edd9a174bfcbc5a8ac8740a3d16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serverPrefab: {fileID: 7078089911084357350, guid: 1aee677f910bc354285c41a2d0547acf,
+    type: 3}
+  clientPrefab: {fileID: 2970341498757984405, guid: 7009485e763f9e0458f1ef361dd388f0,
+    type: 3}

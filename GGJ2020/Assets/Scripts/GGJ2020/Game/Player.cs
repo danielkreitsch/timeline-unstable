@@ -17,7 +17,7 @@ namespace GGJ2020.Game
 
         public Board Board => board;
 
-        public StartGamePacket ToDto()
+        public StartGamePacket CreateStartGamePacket()
         {
             StartGamePacket startGamePacket = new StartGamePacket();
 

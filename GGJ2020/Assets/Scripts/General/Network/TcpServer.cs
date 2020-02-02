@@ -19,28 +19,13 @@ namespace GGJ2020
         private byte[] buffer;
 
         public int Port = 12345;
-
-        public bool SendData = false;
-
-        [SerializeField] private GameController gameController;
-
+        
         // Start is called before the first frame update
         void OnEnable()
         {
             serverThread = new Thread(MasterListen);
             serverThread.IsBackground = true;
             serverThread.Start();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (SendData)
-            {
-                SendData = false;
-                var packet = new StartGamePacket();
-                SendPacket(packet);
-            }
         }
 
         public override void SendPacket(object packet)
@@ -70,7 +55,7 @@ namespace GGJ2020
 
                     if (rec != null)
                     {
-                        Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+                        Run.OnMainThread(() => Tcp.OnReceivePacket(rec));
                     }
                     else
                     {
@@ -78,9 +63,10 @@ namespace GGJ2020
                     }
                 }
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
                 Debug.Log("Master Network error");
+                Debug.LogException(ex);
             }
         }
 
