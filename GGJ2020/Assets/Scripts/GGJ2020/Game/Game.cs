@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using GGJ2020;
 using GGJ2020.Game;
 using UnityEngine;
@@ -48,23 +49,20 @@ public class Game : MonoBehaviour
         myPlayer.Board.GenerateSlots(slots);
     }
 
-    public void StartGame(int items)
+    public void StartGame(List<int> itemIds)
     {
-        StartCoroutine(CStartGame(items));
+        StartCoroutine(CStartGame(itemIds));
     }
-
-    IEnumerator CStartGame(int items)
+    IEnumerator CStartGame(List<int> itemIds)
     {
-        List<Slot> randomSlots = GetRandomSlots(items);
-        List<GameObject> randomItemPrefabs = GetRandomItemPrefabs(items);
-
-        Debug.Log(randomSlots.Count + " slots, " + randomItemPrefabs.Count + " prefabs");
-
-        for (int i = 0; i < items; i++)
+        List<Slot> randomSlots = GetRandomSlots(itemIds.Count);
+        
+        for (int i = 0; i < itemIds.Count; i++)
         {
             yield return new WaitForSeconds(0.25f);
             Slot slot = randomSlots[i];
-            GameObject itemPrefab = randomItemPrefabs[i];
+            int itemId = itemIds[i];
+            GameObject itemPrefab = itemPrefabs.First(p => p.GetComponent<Item>().Id == itemId);
             GameObject itemObj = Instantiate(itemPrefab);
             itemObj.transform.position = slot.transform.position;
             slot.Item = itemObj.GetComponent<Item>();
@@ -128,6 +126,21 @@ public class Game : MonoBehaviour
             }
         }
         return randomPrefabs;
+    }
+    
+    public List<int> GetRandomItemIds(int count)
+    {
+        List<int> randomIds = new List<int>();
+        while (randomIds.Count < count)
+        {
+            GameObject randomPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
+            int randomId = randomPrefab.GetComponent<Item>().Id;
+            if (!randomIds.Contains(randomId))
+            {
+                randomIds.Add(randomId);
+            }
+        }
+        return randomIds;
     }
 
     public void EndGame(bool won)

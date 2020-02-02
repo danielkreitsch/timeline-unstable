@@ -46,15 +46,18 @@ public class GameController : MonoBehaviour
         if (offlineMode)
         {
             game.PrepareBoard(slotCount);
-            game.StartGame(itemCount);
+            game.StartGame(game.GetRandomItemIds(itemCount));
         }
         else
         {
             if (Tcp.Type == TcpType.Client)
             {
+                List<int> itemIds = game.GetRandomItemIds(itemCount);
+                
                 game.PrepareBoard(slotCount);
-                Tcp.Peer.SendPacket(game.MyPlayer.CreateStartGamePacket());
-                game.StartGame(itemCount);
+                game.StartGame(itemIds);
+                
+                Tcp.Peer.SendPacket(game.MyPlayer.CreateStartGamePacket(itemIds));
             }
         }
     }
@@ -174,7 +177,7 @@ public class GameController : MonoBehaviour
             game.MyPlayer.Board.AddSlotFromDto(slotDto);
         }
 
-        game.StartGame(itemCount);
+        game.StartGame(packet.itemIds);
     }
 
     public void OnItemsDataPacketReceive(ItemsDataPacket packet)

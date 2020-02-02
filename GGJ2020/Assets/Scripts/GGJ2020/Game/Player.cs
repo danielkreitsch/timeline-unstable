@@ -17,7 +17,7 @@ namespace GGJ2020.Game
 
         public Board Board => board;
 
-        public StartGamePacket CreateStartGamePacket()
+        public StartGamePacket CreateStartGamePacket(List<int> itemIds)
         {
             StartGamePacket startGamePacket = new StartGamePacket();
 
@@ -38,8 +38,8 @@ namespace GGJ2020.Game
                 }
                 startGamePacket.board.slots.Add(slotDto);
             }
-            
-            startGamePacket.itemIds = new List<int>();
+
+            startGamePacket.itemIds = itemIds;
 
             return startGamePacket;
         }
