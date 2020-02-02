@@ -16,7 +16,7 @@ public class Game : MonoBehaviour
     
     [SerializeField] private GameObject[] itemPrefabs;
 
-    [SerializeField] private UnityEvent onCountdownStart;
+    public UnityEvent onCountdownStart;
     
     public GameObject postGameForm;
     
