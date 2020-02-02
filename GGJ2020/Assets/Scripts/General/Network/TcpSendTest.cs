@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TcpSendTest : MonoBehaviour
 {
-    public TcpClientHandler client;
+    public TcpClient client;
 
     void Update()
     {
