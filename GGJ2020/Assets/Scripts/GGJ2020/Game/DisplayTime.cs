@@ -18,7 +18,7 @@ public class DisplayTime : MonoBehaviour
     string winText;
     [SerializeField]
     string loseText;
-    bool gameOver;
+    bool gameOver = true;
 
     [SerializeField]
     float predelayWin;
@@ -39,6 +39,8 @@ public class DisplayTime : MonoBehaviour
     {
         game.onGameLost.AddListener(LostGame);
         game.onGameWon.AddListener(WonGame);
+        game.onGameStart.AddListener(StartGame);
+        game.onCountdownStart.AddListener(StartCountdown);
     }
 
     // Update is called once per frame
@@ -50,6 +52,15 @@ public class DisplayTime : MonoBehaviour
         }
     }
 
+    void StartCountdown() {
+        StartCoroutine(Countdown());
+    }
+
+    void StartGame() {
+        StopAllCoroutines();
+        gameOver = false;
+    }
+
     void WonGame() {
         gameOver = true;
         StartCoroutine(Flicker(winText, predelayWin, displayDurationWin, flickerProbabilityThreshholdWin));
@@ -59,6 +70,15 @@ public class DisplayTime : MonoBehaviour
         text.text = "00:000";
         gameOver = true;
         StartCoroutine(Flicker(loseText, predelayLose, displayDurationLose, flickerProbabilityThreshholdLose));
+    }
+
+    IEnumerator Countdown() {
+        text.text = "danger";
+        yield return new WaitForSeconds(1);
+        text.text = "timeline";
+        yield return new WaitForSeconds(1);
+        text.text = "split";
+        yield return new WaitForSeconds(1);
     }
 
 
