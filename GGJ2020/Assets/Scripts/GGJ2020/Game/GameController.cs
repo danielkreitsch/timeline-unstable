@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private bool offlineMode = false;
+    
     [SerializeField] private Game game;
 
     [SerializeField] private TcpPeer tcpPeer;
@@ -41,10 +43,18 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        if (tcpPeer is TcpClientHandler)
+        if (offlineMode)
         {
             game.PrepareBoard(slotCount);
-            SendBoardData();
+            game.StartGame(itemCount);
+        }
+        else
+        {
+            if (tcpPeer is TcpClientHandler)
+            {
+                game.PrepareBoard(slotCount);
+                SendBoardData();
+            }
         }
     }
 
@@ -186,19 +196,28 @@ public class GameController : MonoBehaviour
         {
             if (slot.Item != null)
             {
+                bool found = false;
                 foreach (ItemDto itemDto in packet.items)
                 {
-                    if (itemDto.id != slot.Item.Id || itemDto.slotId != slot.Id)
+                    if (itemDto.id == slot.Item.Id && itemDto.slotId == slot.Id)
                     {
-                        equal = false;
+                        found = true;
                         break;
                     }
+                }
+                if (!found)
+                {
+                    equal = false;
+                    break;
                 }
             }
         }
 
         if (equal)
         {
+            bool won = true;
+            game.EndGame(won);
+            tcpPeer.SendPacket(new EndGamePacket(won));
             Debug.Log("EQUAL! WON!");
         }
         else

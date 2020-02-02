@@ -870,6 +870,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PostProcessing
       objectReference: {fileID: 0}
+    - target: {fileID: 2051408021907568816, guid: 7c850f8c07b19484e98c679fe2584fbe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2051408021907568817, guid: 7c850f8c07b19484e98c679fe2584fbe,
         type: 3}
       propertyPath: m_Enabled

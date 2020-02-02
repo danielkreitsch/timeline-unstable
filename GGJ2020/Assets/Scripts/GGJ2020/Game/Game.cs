@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GGJ2020;
 using GGJ2020.Game;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Game : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class Game : MonoBehaviour
     private float timer;
 
     private bool started;
+
+    [SerializeField] private UnityEvent onGameWon;
+    
+    [SerializeField] private UnityEvent onGameLost;
 
     public Player MyPlayer => myPlayer;
 
@@ -123,5 +128,17 @@ public class Game : MonoBehaviour
             }
         }
         return randomPrefabs;
+    }
+
+    public void EndGame(bool won)
+    {
+        if (won)
+        {
+            onGameWon.Invoke();
+        }
+        else
+        {
+            onGameLost.Invoke();
+        }
     }
 }
