@@ -24,9 +24,18 @@ public class Board : MonoBehaviour
         slots.Clear();
     }
 
-    public void GenerateSlots(int count)
+    public void GenerateSlots(GameObject slotsPrefab)
     {
-        int loopCount = 0;
+        Instantiate(slotsPrefab);
+        foreach (Transform child in slotsPrefab.transform)
+        {
+            Slot slot = child.gameObject.GetComponent<Slot>();
+            if (slot != null)
+            {
+                slots.Add(slot);
+            }
+        }
+        /*int loopCount = 0;
         while (slots.Count < count && loopCount < 1000)
         {
             loopCount++;
@@ -55,7 +64,7 @@ public class Board : MonoBehaviour
                 Slot slot = slotObj.GetComponent<Slot>();
                 slots.Add(slot);
             }
-        }
+        }*/
     }
 
     public void AddSlotFromDto(SlotDto dto)

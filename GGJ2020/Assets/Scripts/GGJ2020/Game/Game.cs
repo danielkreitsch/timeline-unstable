@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GGJ2020;
 using GGJ2020.Game;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,8 +11,10 @@ public class Game : MonoBehaviour
 {
     [SerializeField] private Player myPlayer;
 
-    [SerializeField] private GameObject[] itemPrefabs;
+    [SerializeField] private GameObject[] randomSlotPresetPrefabs;
     
+    [SerializeField] private GameObject[] itemPrefabs;
+
     private State state;
 
     private float timer;
@@ -44,9 +47,9 @@ public class Game : MonoBehaviour
         set => running = value;
     }
 
-    public void PrepareBoard(int slots)
+    public void PrepareBoard()
     {
-        myPlayer.Board.GenerateSlots(slots);
+        myPlayer.Board.GenerateSlots(GetRandomSlotsPresetPrefab());
     }
 
     public void StartGame(List<int> itemIds)
@@ -112,6 +115,11 @@ public class Game : MonoBehaviour
             }
         }
         return randomSlots;
+    }
+
+    public GameObject GetRandomSlotsPresetPrefab()
+    {
+        return randomSlotPresetPrefabs[Random.Range(0, randomSlotPresetPrefabs.Length)];
     }
 
     public List<GameObject> GetRandomItemPrefabs(int count)

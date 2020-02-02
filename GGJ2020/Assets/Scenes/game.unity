@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1536,7 +1536,7 @@ PrefabInstance:
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
       propertyPath: itemPrefabs.Array.size
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
@@ -1547,6 +1547,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onGameLost.m_PersistentCalls.m_Calls.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: randomSlotPresetPrefabs.Array.size
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
@@ -1611,13 +1616,13 @@ PrefabInstance:
         type: 3}
       propertyPath: itemPrefabs.Array.data[8]
       value: 
-      objectReference: {fileID: 6323640246145635885, guid: d227be1dcccf4744eb0e632a88f8a843,
+      objectReference: {fileID: 4882544140271670981, guid: 3b263285f2f02484eb44b104c3ab44ca,
         type: 3}
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
       propertyPath: itemPrefabs.Array.data[9]
       value: 
-      objectReference: {fileID: 4882544140271670981, guid: 3b263285f2f02484eb44b104c3ab44ca,
+      objectReference: {fileID: 4648768069802827093, guid: 1dbd6b5844c77b1429de60fb9f4a7a5a,
         type: 3}
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
@@ -1643,7 +1648,7 @@ PrefabInstance:
         type: 3}
       propertyPath: itemPrefabs.Array.data[10]
       value: 
-      objectReference: {fileID: 4648768069802827093, guid: 1dbd6b5844c77b1429de60fb9f4a7a5a,
+      objectReference: {fileID: 6036733893455974033, guid: ded70bca961eaa04a94c0267e48a2399,
         type: 3}
     - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
@@ -1716,6 +1721,42 @@ PrefabInstance:
       propertyPath: onGameWon.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: randomSlotPresetPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 5463598138187070236, guid: 0c2e9ddfe916505408548d3bd357258f,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: randomSlotPresetPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 3935972807502878504, guid: 2e68079db2c27e8499e036dfde3a9658,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: randomSlotPresetPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 2876588830596471859, guid: 598510588fdea414fbdfb9656252068f,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: randomSlotPresetPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 1418561161414815309, guid: 1cb4cb5748d800d42ba698aefd9aee14,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: randomSlotPresetPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 7608515834303990273, guid: 6e939f8889fc6ba49be2d26297dfe362,
+        type: 3}
+    - target: {fileID: 2010872647832110052, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
+        type: 3}
+      propertyPath: randomSlotPresetPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 6344980999733068459, guid: bb60db91d0b04bf418ec34c0b86061d4,
+        type: 3}
     - target: {fileID: 2010872647832110053, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1784,7 +1825,7 @@ PrefabInstance:
     - target: {fileID: 2010872647832110055, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
       propertyPath: offlineMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2010872647832110055, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}

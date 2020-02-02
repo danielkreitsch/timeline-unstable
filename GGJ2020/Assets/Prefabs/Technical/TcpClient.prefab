@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1190860827176579649}
   - component: {fileID: 2970341498757984406}
   m_Layer: 0
-  m_Name: TcpClientHandler
+  m_Name: TcpClient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef7cb07ae871d64294c59ddc9c7299c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MasterIp: 127.0.0.1
+  MasterIp: 192.168.8.100
   Port: 6677
-  SendData: 0
-  gameController: {fileID: 0}

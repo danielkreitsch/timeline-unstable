@@ -19,12 +19,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private LayerMask itemLayer;
 
     [SerializeField] private LayerMask boardLayer;
-
-    /**
-     * Wird noch ignoriert (noch nicht implementiert)
-     */
-    [SerializeField] private int slotCount;
-
+    
     [SerializeField] private int itemCount;
 
     private Slot hoveringSlot;
@@ -45,7 +40,7 @@ public class GameController : MonoBehaviour
     {
         if (offlineMode)
         {
-            game.PrepareBoard(slotCount);
+            game.PrepareBoard();
             game.StartGame(game.GetRandomItemIds(itemCount));
         }
         else
@@ -54,7 +49,7 @@ public class GameController : MonoBehaviour
             {
                 List<int> itemIds = game.GetRandomItemIds(itemCount);
                 
-                game.PrepareBoard(slotCount);
+                game.PrepareBoard();
                 game.StartGame(itemIds);
                 
                 Tcp.Peer.SendPacket(game.MyPlayer.CreateStartGamePacket(itemIds));
