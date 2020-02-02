@@ -17,6 +17,8 @@ public class Game : MonoBehaviour
 
     private bool running;
 
+    public UnityEvent onGameStart;
+    
     public UnityEvent onGameWon;
 
     public UnityEvent onGameLost;
@@ -71,6 +73,8 @@ public class Game : MonoBehaviour
 
         running = true;
         state = State.TakeItem;
+        
+        onGameStart.Invoke();
     }
 
     public void PlaceItem(Slot slot, Item item)
