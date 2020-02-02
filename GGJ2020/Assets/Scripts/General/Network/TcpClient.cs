@@ -23,6 +23,15 @@ namespace GGJ2020
 		public string MasterIp = "127.0.0.1";
 		public int Port = 12345;
 		
+		private void Start()
+		{
+			if (Tcp.Peer != null)
+			{
+				Destroy(Tcp.Peer.gameObject);
+			}
+			DontDestroyOnLoad(gameObject);
+		}
+		
 		// Start is called before the first frame update
 		public void Connect()
 		{

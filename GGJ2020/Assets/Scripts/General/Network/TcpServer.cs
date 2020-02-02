@@ -19,7 +19,16 @@ namespace GGJ2020
         private byte[] buffer;
 
         public int Port = 12345;
-        
+
+        private void Start()
+        {
+            if (Tcp.Peer != null)
+            {
+                Destroy(Tcp.Peer.gameObject);
+            }
+            DontDestroyOnLoad(gameObject);
+        }
+
         // Start is called before the first frame update
         public void Init()
         {

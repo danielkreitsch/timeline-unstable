@@ -32,7 +32,15 @@ namespace GGJ2020.Game
 
         private void Awake()
         {
-            instance = this;
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
         public static void StartTcp(TcpType type)

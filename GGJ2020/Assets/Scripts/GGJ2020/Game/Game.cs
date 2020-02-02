@@ -188,8 +188,15 @@ public class Game : MonoBehaviour
             extraTimer += Time.deltaTime;
         }*/
         yield return new WaitForSeconds(7);
-        Tcp.Peer.SendPacket(new RestartGamePacket());
+        if (Tcp.Peer != null)
+        {
+            Tcp.Peer.SendPacket(new RestartGamePacket());
+        }
         postGameForm.SetActive(true);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadGameScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
