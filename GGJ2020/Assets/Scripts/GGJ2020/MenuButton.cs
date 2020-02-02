@@ -81,9 +81,10 @@ public class MenuButton : MonoBehaviour
         {
             if (otherOption != menuOption)
             {
-                otherOption.targetPos = new Vector3(otherOption.transform.position.x, 1, otherOption.transform.position.z);
+                otherOption.targetPos = new Vector3(otherOption.transform.position.x, otherOption.transform.position.y - 0.1f, otherOption.transform.position.z);
             }
         }
+        menuOption.targetPos = new Vector3(menuOption.transform.position.x, menuOption.transform.position.y + 0.5f, menuOption.transform.position.z);
         yield return new WaitForSeconds(0.5f);
         menuOption.onSelect.Invoke();
     }
