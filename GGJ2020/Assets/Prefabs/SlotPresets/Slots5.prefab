@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5463598138187070235}
   m_Layer: 8
-  m_Name: SlotPreset 1
+  m_Name: Slots5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,7 +285,7 @@ PrefabInstance:
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
