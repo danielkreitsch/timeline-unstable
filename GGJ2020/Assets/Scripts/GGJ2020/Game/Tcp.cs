@@ -63,6 +63,11 @@ namespace GGJ2020.Game
                 GameController gameController = FindObjectOfType<GameController>();
                 gameController.OnEndGamePacketReceive((EndGamePacket) packet);
             }
+            else if (packet is RestartGamePacket)
+            {
+                GameController gameController = FindObjectOfType<GameController>();
+                gameController.OnRestartGamePacketReceive((RestartGamePacket) packet);
+            }
         }
     }
 

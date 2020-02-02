@@ -6,6 +6,7 @@ using GGJ2020.Game;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
@@ -168,5 +169,17 @@ public class Game : MonoBehaviour
             onGameLost.Invoke();
         }
         running = false;
+
+        if (Tcp.Type == TcpType.Server)
+        {
+            StartCoroutine(CEndGame());
+        }
+    }
+
+    IEnumerator CEndGame()
+    {
+        yield return new WaitForSeconds(6);
+        Tcp.Peer.SendPacket(new RestartGamePacket());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

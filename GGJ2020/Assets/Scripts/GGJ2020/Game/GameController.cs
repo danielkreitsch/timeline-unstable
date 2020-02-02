@@ -74,8 +74,7 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            //game.PrepareBoard(slotCount, itemCount);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         if (game.State == State.TakeItem)
@@ -173,6 +172,11 @@ public class GameController : MonoBehaviour
         }
 
         game.StartGame(packet.itemIds);
+    }
+
+    public void OnRestartGamePacketReceive(RestartGamePacket packet)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnItemsDataPacketReceive(ItemsDataPacket packet)
