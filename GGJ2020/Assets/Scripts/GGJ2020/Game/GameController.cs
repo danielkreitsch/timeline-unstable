@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private bool offlineMode = false;
+
+    [SerializeField] private bool autoWin;
     
     [SerializeField] private Game game;
 
@@ -60,11 +62,20 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (game.Started)
+        if (game.Running)
         {
             if (game.Timer >= 20)
             {
                 game.Timer = 20;
+                if (autoWin)
+                {
+                    game.onGameWon.Invoke();
+                }
+                else
+                {
+                    game.onGameLost.Invoke();
+                }
+                game.Running = false;
             }
             else
             {
@@ -218,7 +229,6 @@ public class GameController : MonoBehaviour
             bool won = true;
             game.EndGame(won);
             tcpPeer.SendPacket(new EndGamePacket(won));
-            Debug.Log("EQUAL! WON!");
         }
         else
         {

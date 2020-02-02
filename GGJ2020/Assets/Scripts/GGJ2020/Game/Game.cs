@@ -17,11 +17,11 @@ public class Game : MonoBehaviour
 
     private float timer;
 
-    private bool started;
+    private bool _running;
 
-    [SerializeField] private UnityEvent onGameWon;
+    public UnityEvent onGameWon;
     
-    [SerializeField] private UnityEvent onGameLost;
+    public UnityEvent onGameLost;
 
     public Player MyPlayer => myPlayer;
 
@@ -43,7 +43,11 @@ public class Game : MonoBehaviour
         set => timer = value;
     }
 
-    public bool Started => started;
+    public bool Running
+    {
+        get => _running;
+        set => _running = value;
+    }
 
     public void PrepareBoard(int slots)
     {
@@ -73,7 +77,7 @@ public class Game : MonoBehaviour
             slot.Item.PlaySpawnAnimation();
         }
 
-        started = true;
+        _running = true;
         state = State.TakeItem;
     }
 
