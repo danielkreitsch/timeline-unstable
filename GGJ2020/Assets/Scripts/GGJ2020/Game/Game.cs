@@ -18,8 +18,6 @@ public class Game : MonoBehaviour
 
     public UnityEvent onCountdownStart;
     
-    public GameObject postGameForm;
-    
     private State state;
 
     private float timer;
@@ -197,7 +195,7 @@ public class Game : MonoBehaviour
         {
             Tcp.Peer.SendPacket(new RestartGamePacket());
         }
-        postGameForm.SetActive(true);
+        SceneManager.LoadScene("game_over");
     }
 
     public void LoadGameScene()
