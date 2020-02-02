@@ -42,7 +42,7 @@ namespace GGJ2020
                 SendPacket(packet);
             }
         }
-        
+
         public override void SendPacket(object packet)
         {
             MasterWrite(NetworkUtility.ToNetwork(packet));
@@ -58,32 +58,23 @@ namespace GGJ2020
 
                 client = tcpListener.AcceptTcpClient();
                 var stream = client.GetStream();
+                var streamReader = new StreamReader(stream);
 
                 buffer = new byte[2048];
 
                 while (true)
                 {
-                    if (!stream.CanRead)
-                    {
-                        Debug.Log("Master Cannot Read");
-                        continue;
-                    }
-                    if (stream.DataAvailable)
-                    {
-                        int l = stream.Read(buffer, 0, buffer.Length);
-                        //Debug.Log("Master read " + l + "Bytes");
-                        string receivedString = Encoding.ASCII.GetString(buffer);
-                        Debug.Log("Received: " + receivedString);
-                        var rec = NetworkUtility.FromNetwork(receivedString);
+                    string receivedString = streamReader.ReadLine();
+                    Debug.Log("Received: " + receivedString);
+                    var rec = NetworkUtility.FromNetwork(receivedString);
 
-                        if (rec != null)
-                        {
-                            Run.OnMainThread(() => gameController.OnReceivePacket(rec));
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Packet deserialization didn't work: " + receivedString);
-                        }
+                    if (rec != null)
+                    {
+                        Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Packet deserialization didn't work: " + receivedString);
                     }
                 }
             }
@@ -109,10 +100,10 @@ namespace GGJ2020
                     Debug.Log("Master Cannot write to stream");
                     return;
                 }
-                
+
                 Debug.Log("Sent: " + message);
 
-                byte[] messageBytes = Encoding.ASCII.GetBytes(message + "\n");
+                byte[] messageBytes = Encoding.UTF8.GetBytes(message + "\n");
                 stream.Write(messageBytes, 0, messageBytes.Length);
                 stream.Flush();
             }

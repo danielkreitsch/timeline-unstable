@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private bool offlineMode = false;
 
     [SerializeField] private bool autoWin;
-    
+
     [SerializeField] private Game game;
 
     [SerializeField] private TcpPeer tcpPeer;
@@ -67,15 +67,7 @@ public class GameController : MonoBehaviour
             if (game.Timer >= 20)
             {
                 game.Timer = 20;
-                if (autoWin)
-                {
-                    game.onGameWon.Invoke();
-                }
-                else
-                {
-                    game.onGameLost.Invoke();
-                }
-                game.Running = false;
+                game.EndGame(autoWin);
             }
             else
             {
@@ -175,32 +167,29 @@ public class GameController : MonoBehaviour
         //Debug.Log("Received packet in game controller");
         if (packet is StartGamePacket)
         {
-            OnOtherPlayerDataReceive((StartGamePacket) packet);
+            OnStartGamePacketReceive((StartGamePacket) packet);
         }
         else if (packet is ItemsDataPacket)
         {
-            OnItemsDataReceive((ItemsDataPacket) packet);
+            OnItemsDataPacketReceive((ItemsDataPacket) packet);
+        }
+        else if (packet is EndGamePacket)
+        {
+            OnEndGamePacketReceive((EndGamePacket) packet);
         }
     }
 
-    public void OnOtherPlayerDataReceive(StartGamePacket otherPlayerData)
+    public void OnStartGamePacketReceive(StartGamePacket packet)
     {
-        game.OtherPlayerData = otherPlayerData;
-
-        foreach (SlotDto slotDto in otherPlayerData.board.slots)
+        foreach (SlotDto slotDto in packet.board.slots)
         {
             game.MyPlayer.Board.AddSlotFromDto(slotDto);
         }
-        
-        game.StartGame(itemCount);
 
-        Debug.Log("Player data received (" + game.OtherPlayerData.board.slots.Count + " slots)");
-        
-        // Check if the board data is same
-        
+        game.StartGame(itemCount);
     }
 
-    public void OnItemsDataReceive(ItemsDataPacket packet)
+    public void OnItemsDataPacketReceive(ItemsDataPacket packet)
     {
         bool equal = true;
         foreach (Slot slot in game.MyPlayer.Board.Slots)
@@ -234,6 +223,11 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("NOT EQUAL");
         }
+    }
+
+    public void OnEndGamePacketReceive(EndGamePacket packet)
+    {
+        game.EndGame(packet.won);
     }
 
     public void SendBoardData()

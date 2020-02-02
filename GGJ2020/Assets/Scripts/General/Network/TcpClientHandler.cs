@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -30,7 +31,7 @@ namespace GGJ2020
 		{
 			try
 			{
-				clientThread = new Thread(new ThreadStart(ClientListen));
+				clientThread = new Thread(ClientListen);
 				clientThread.IsBackground = true;
 				clientThread.Start();
 			}
@@ -78,34 +79,24 @@ namespace GGJ2020
 
 				Debug.Log("Connected to Master");
 
-				buffer = new byte[2048];
 				var stream = master.GetStream();
-
+				var streamReader = new StreamReader(stream);
+				
 				buffer = new byte[2048];
+				
 				while (true)
 				{
-					if (!stream.CanRead)
+					string receivedString = streamReader.ReadLine();
+					Debug.Log("Received: " + receivedString);
+					var rec = NetworkUtility.FromNetwork(receivedString);
+
+					if (rec != null)
 					{
-						Debug.Log("Client Cannot Read");
-						continue;
+						Run.OnMainThread(() => gameController.OnReceivePacket(rec));
 					}
-
-					if (stream.DataAvailable)
+					else
 					{
-						int l = stream.Read(buffer, 0, buffer.Length);
-						//Debug.Log("Client read " + l + "Bytes");
-						string receivedString = Encoding.ASCII.GetString(buffer);
-						Debug.Log("Received: " + receivedString);
-						var rec = NetworkUtility.FromNetwork(receivedString);
-
-						if (rec != null)
-						{
-							Run.OnMainThread(() => gameController.OnReceivePacket(rec));
-						}
-						else
-						{
-							Debug.LogWarning("Packet deserialization didn't work: " + receivedString);
-						}
+						Debug.LogWarning("Packet deserialization didn't work: " + receivedString);
 					}
 				}
 			}
@@ -134,7 +125,7 @@ namespace GGJ2020
 
 				Debug.Log("Sent: " + message);
 
-				byte[] messageBytes = Encoding.ASCII.GetBytes(message + "\n");
+				byte[] messageBytes = Encoding.UTF8.GetBytes(message + "\n");
 				stream.Write(messageBytes, 0, messageBytes.Length);
 				stream.Flush();
 			}

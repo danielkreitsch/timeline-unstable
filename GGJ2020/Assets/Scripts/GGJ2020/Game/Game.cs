@@ -10,26 +10,18 @@ public class Game : MonoBehaviour
     [SerializeField] private Player myPlayer;
 
     [SerializeField] private GameObject[] itemPrefabs;
-
-    private StartGamePacket otherPlayerData;
-
+    
     private State state;
 
     private float timer;
 
-    private bool _running;
+    private bool running;
 
     public UnityEvent onGameWon;
-    
+
     public UnityEvent onGameLost;
 
     public Player MyPlayer => myPlayer;
-
-    public StartGamePacket OtherPlayerData
-    {
-        get => otherPlayerData;
-        set => otherPlayerData = value;
-    }
 
     public State State
     {
@@ -45,8 +37,8 @@ public class Game : MonoBehaviour
 
     public bool Running
     {
-        get => _running;
-        set => _running = value;
+        get => running;
+        set => running = value;
     }
 
     public void PrepareBoard(int slots)
@@ -58,12 +50,12 @@ public class Game : MonoBehaviour
     {
         StartCoroutine(CStartGame(items));
     }
-    
+
     IEnumerator CStartGame(int items)
     {
         List<Slot> randomSlots = GetRandomSlots(items);
         List<GameObject> randomItemPrefabs = GetRandomItemPrefabs(items);
-        
+
         Debug.Log(randomSlots.Count + " slots, " + randomItemPrefabs.Count + " prefabs");
 
         for (int i = 0; i < items; i++)
@@ -77,7 +69,7 @@ public class Game : MonoBehaviour
             slot.Item.PlaySpawnAnimation();
         }
 
-        _running = true;
+        running = true;
         state = State.TakeItem;
     }
 
@@ -136,6 +128,12 @@ public class Game : MonoBehaviour
 
     public void EndGame(bool won)
     {
+        if (!running)
+        {
+            Debug.LogWarning("Can't end game again.");
+            return;
+        }
+        
         if (won)
         {
             onGameWon.Invoke();
@@ -144,5 +142,6 @@ public class Game : MonoBehaviour
         {
             onGameLost.Invoke();
         }
+        running = false;
     }
 }
