@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 
 public class DramaGenerator : MonoBehaviour
 {
@@ -9,11 +11,25 @@ public class DramaGenerator : MonoBehaviour
     Game game;
     [SerializeField]
     CameraShaker shaker;
+    [SerializeField]
+    Volume postProcessingVolume;
+
+    ChromaticAberration abberation;
+
+    Vignette vignette;
 
     [SerializeField]
     float shakeInterval;
     [SerializeField, Range(1, 20)]
     int shakesToIncreaseIntensity = 10;
+    [SerializeField]
+    float maxAbberationTime;
+    [SerializeField]
+    float maxVignetteTime;
+
+    float maxAbberation;
+    float maxVignette;
+
 
     // Start is called before the first frame update
     IEnumerator Start()
@@ -29,9 +45,19 @@ public class DramaGenerator : MonoBehaviour
         }
     }
 
+    private void Awake() {
+        postProcessingVolume.profile.TryGet<ChromaticAberration>(out abberation);
+        maxAbberation = abberation.intensity.value;
+        postProcessingVolume.profile.TryGet<Vignette>(out vignette);
+        maxVignette = vignette.intensity.value;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+
+        abberation.intensity.Override(Mathf.Clamp((game.Timer / maxAbberationTime)*maxAbberation, 0, maxAbberation));
+        vignette.intensity.Override(Mathf.Clamp((game.Timer / maxVignetteTime)*maxVignette, 0, maxVignette));
+        vignette.color.Override(Random.ColorHSV());
     }
 }
