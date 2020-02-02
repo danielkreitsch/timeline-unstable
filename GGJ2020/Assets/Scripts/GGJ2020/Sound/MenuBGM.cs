@@ -41,11 +41,12 @@ public class MenuBGM : MonoBehaviour
 
     void StopPlay() {
         if (source.isPlaying) {
-            FadeOut(source, 1);
+            StartCoroutine(FadeOut(source, 1));
         }
     }
 
     public static IEnumerator FadeOut(AudioSource audioSource, float FadeTime) {
+        Debug.Log("StoppingSource");
         float startVolume = audioSource.volume;
 
         while (audioSource.volume > 0) {
