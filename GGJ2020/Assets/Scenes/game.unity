@@ -1883,7 +1883,7 @@ PrefabInstance:
     - target: {fileID: 2010872647832110055, guid: 70e2660fe2ce9c14aa30cf99273eeb54,
         type: 3}
       propertyPath: autoWin
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70e2660fe2ce9c14aa30cf99273eeb54, type: 3}
@@ -2558,6 +2558,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8311881920563748302, guid: fb69664cd804bfb4d89b9a78daf4767e,
+        type: 3}
+      propertyPath: game
+      value: 
+      objectReference: {fileID: 1025416708}
+    - target: {fileID: 8311881920987590805, guid: fb69664cd804bfb4d89b9a78daf4767e,
+        type: 3}
+      propertyPath: game
+      value: 
+      objectReference: {fileID: 1025416708}
+    - target: {fileID: 8311881921179978553, guid: fb69664cd804bfb4d89b9a78daf4767e,
+        type: 3}
+      propertyPath: game
+      value: 
+      objectReference: {fileID: 1025416708}
     - target: {fileID: 8311881921690217780, guid: fb69664cd804bfb4d89b9a78daf4767e,
         type: 3}
       propertyPath: m_Name
@@ -2618,5 +2633,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8311881921785295157, guid: fb69664cd804bfb4d89b9a78daf4767e,
+        type: 3}
+      propertyPath: game
+      value: 
+      objectReference: {fileID: 1025416708}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb69664cd804bfb4d89b9a78daf4767e, type: 3}
