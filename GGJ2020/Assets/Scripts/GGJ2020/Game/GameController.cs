@@ -176,8 +176,7 @@ public class GameController : MonoBehaviour
 
     public void OnRestartGamePacketReceive(RestartGamePacket packet)
     {
-        game.postGameForm.SetActive(true);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene("game_over");
     }
 
     public void OnItemsDataPacketReceive(ItemsDataPacket packet)
