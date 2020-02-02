@@ -43,9 +43,12 @@ public class DramaGenerator : MonoBehaviour
     float maxVignette;
     bool gameOver = false;
 
+    void StartShake() {
+        StartCoroutine(ShakeRepeated());
+    }
 
     // Start is called before the first frame update
-    IEnumerator Start()
+    IEnumerator ShakeRepeated()
     {
         int shakes = 0;
         while (true) {
@@ -61,6 +64,7 @@ public class DramaGenerator : MonoBehaviour
     private void Awake() {
         game.onGameLost.AddListener(LoseEffect);
         game.onGameWon.AddListener(WinEffect);
+        game.onCountdownStart.AddListener(StartShake);
 
         postProcessingVolume.profile.TryGet<ColorAdjustments>(out colorAdjustments);
         postProcessingVolume.profile.TryGet<ChromaticAberration>(out abberation);

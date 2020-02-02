@@ -646,12 +646,12 @@ PrefabInstance:
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
@@ -666,7 +666,7 @@ PrefabInstance:
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
       propertyPath: m_text
-      value: unstable
+      value: 127.0.0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7754014561661801858, guid: 81c0224799dcd674ea6bd330a1bdf75c,
         type: 3}
