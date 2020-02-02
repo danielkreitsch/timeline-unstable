@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5463598138187070235}
   m_Layer: 8
-  m_Name: SlotPreset 1
+  m_Name: Slots5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,7 +50,7 @@ PrefabInstance:
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.32
+      value: -8.11
       objectReference: {fileID: 0}
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
@@ -125,7 +125,7 @@ PrefabInstance:
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.15
+      value: -7.9399996
       objectReference: {fileID: 0}
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
@@ -200,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.36
+      value: 8.57
       objectReference: {fileID: 0}
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
@@ -280,7 +280,7 @@ PrefabInstance:
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.5
+      value: 8.71
       objectReference: {fileID: 0}
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
@@ -355,7 +355,7 @@ PrefabInstance:
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.91
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7258888008041922790, guid: 34b836df087a1b24b86c4afaffa09587,
         type: 3}
