@@ -10,7 +10,7 @@ public class Item : MonoBehaviour
     
     [SerializeField] private int id;
     
-    private Vector3 targetPos;
+    [SerializeField] private Vector3 targetPos;
     
     public Vector3 TargetPos
     {
@@ -28,6 +28,6 @@ public class Item : MonoBehaviour
     
     private void Update()
     {
-        transform.position = transform.position + (targetPos - transform.position) * Time.deltaTime * smoothing;
+        transform.position = transform.position + (targetPos - transform.position) * Mathf.Min(1, Time.deltaTime * smoothing);
     }
 }

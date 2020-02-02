@@ -23,18 +23,18 @@ namespace GGJ2020.Game
             instance = this;
         }
 
-        public void StartTcp(TcpType type)
+        public static void StartTcp(TcpType type)
         {
-            this.type = type;
+            instance.type = type;
             if (type == TcpType.Server)
             {
-                GameObject obj = Instantiate(serverPrefab);
-                peer = obj.GetComponent<TcpServer>();
+                GameObject obj = Instantiate(instance.serverPrefab);
+                instance.peer = obj.GetComponent<TcpServer>();
             }
             else if (type == TcpType.Client)
             {
-                GameObject obj = Instantiate(clientPrefab);
-                peer = obj.GetComponent<TcpClient>();
+                GameObject obj = Instantiate(instance.clientPrefab);
+                instance.peer = obj.GetComponent<TcpClient>();
             }
         }
     }
