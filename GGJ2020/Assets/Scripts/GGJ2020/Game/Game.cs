@@ -10,7 +10,7 @@ public class Game : MonoBehaviour
 
     [SerializeField] private GameObject[] itemPrefabs;
 
-    private PlayerDto otherPlayerData;
+    private StartGamePacket otherPlayerData;
 
     private State state;
 
@@ -20,7 +20,7 @@ public class Game : MonoBehaviour
 
     public Player MyPlayer => myPlayer;
 
-    public PlayerDto OtherPlayerData
+    public StartGamePacket OtherPlayerData
     {
         get => otherPlayerData;
         set => otherPlayerData = value;
@@ -39,30 +39,23 @@ public class Game : MonoBehaviour
     }
 
     public bool Started => started;
-    
-    public void PrepareBoard(int slots, int items)
+
+    public void PrepareBoard(int slots)
     {
-        StartCoroutine(CPrepareBoard(slots, items));
+        myPlayer.Board.GenerateSlots(slots);
     }
 
-    IEnumerator CPrepareBoard(int slots, int items)
+    public void StartGame(int items)
     {
-        timer = 0;
-        started = false;
-        
-        //myPlayer.Board.GenerateSlots(slots);
-        
-        foreach (Slot slot in GetAllSlots())
-        {
-            if (slot.Item != null)
-            {
-                Destroy(slot.Item.gameObject);
-                slot.Item = null;
-            }
-        }
-
+        StartCoroutine(CStartGame(items));
+    }
+    
+    IEnumerator CStartGame(int items)
+    {
         List<Slot> randomSlots = GetRandomSlots(items);
         List<GameObject> randomItemPrefabs = GetRandomItemPrefabs(items);
+        
+        Debug.Log(randomSlots.Count + " slots, " + randomItemPrefabs.Count + " prefabs");
 
         for (int i = 0; i < items; i++)
         {
@@ -90,21 +83,25 @@ public class Game : MonoBehaviour
 
     public List<Slot> GetAllSlots()
     {
-        List<Slot> slots = new List<Slot>();
+        /*List<Slot> slots = new List<Slot>();
         foreach (GameObject slotObj in GameObject.FindGameObjectsWithTag("Slot"))
         {
             Slot slot = slotObj.GetComponent<Slot>();
             slots.Add(slot);
         }
-        return slots;
+        Debug.Log("GetAllSlots() -> " + slots.Count);
+        return slots;*/
+        return myPlayer.Board.Slots;
     }
 
     public List<Slot> GetRandomSlots(int count)
     {
         List<Slot> randomSlots = new List<Slot>();
         List<Slot> allSlots = GetAllSlots();
-        while (randomSlots.Count < count)
+        int loopCount = 0;
+        while (randomSlots.Count < count && loopCount < 100)
         {
+            loopCount++;
             Slot randomSlot = allSlots[Random.Range(0, allSlots.Count)];
             if (!randomSlots.Contains(randomSlot))
             {

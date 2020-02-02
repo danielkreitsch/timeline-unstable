@@ -6,6 +6,16 @@ public class Slot : MonoBehaviour
 {
     [SerializeField] private Item item;
 
+    private int id;
+
+    private static int nextId = 1;
+
+    public int Id
+    {
+        get => id;
+        set => id = value;
+    }
+
     public Item Item
     {
         get => item;
@@ -17,6 +27,11 @@ public class Slot : MonoBehaviour
                 item.TargetPos = transform.position;
             }
         }
+    }
+
+    void Awake()
+    {
+        id = nextId++;
     }
 
     public bool IsEmpty()

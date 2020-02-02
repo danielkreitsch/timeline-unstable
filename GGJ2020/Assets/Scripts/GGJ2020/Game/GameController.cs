@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using GGJ2020;
 using GGJ2020.Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] private Game game;
+
+    [SerializeField] private TcpPeer tcpPeer;
 
     [SerializeField] private LayerMask slotLayer;
 
@@ -38,7 +41,11 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        game.PrepareBoard(slotCount, itemCount);
+        if (tcpPeer is TcpClientHandler)
+        {
+            game.PrepareBoard(slotCount);
+            SendBoardData();
+        }
     }
 
     void Update()
@@ -57,7 +64,8 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            game.PrepareBoard(slotCount, itemCount);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            //game.PrepareBoard(slotCount, itemCount);
         }
 
         if (game.State == State.TakeItem)
@@ -119,11 +127,13 @@ public class GameController : MonoBehaviour
                 {
                     game.PlaceItem(hoveringSlot, CursorItem);
                     CursorItem = null;
+                    SendItemsData();
                 }
                 else
                 {
                     game.PlaceItem(oldSlot, CursorItem);
                     CursorItem = null;
+                    SendItemsData();
                 }
             }
         }
@@ -141,19 +151,83 @@ public class GameController : MonoBehaviour
 
     public void OnReceivePacket(object packet)
     {
-        Debug.Log("Received packet in game controller");
-        if (packet is PlayerDto)
+        //Debug.Log("Received packet in game controller");
+        if (packet is StartGamePacket)
         {
-            OnOtherPlayerDataReceive((PlayerDto) packet);
+            OnOtherPlayerDataReceive((StartGamePacket) packet);
+        }
+        else if (packet is ItemsDataPacket)
+        {
+            OnItemsDataReceive((ItemsDataPacket) packet);
         }
     }
 
-    public void OnOtherPlayerDataReceive(PlayerDto otherPlayerData)
+    public void OnOtherPlayerDataReceive(StartGamePacket otherPlayerData)
     {
-        Debug.Log("Received player data");
         game.OtherPlayerData = otherPlayerData;
 
+        foreach (SlotDto slotDto in otherPlayerData.board.slots)
+        {
+            game.MyPlayer.Board.AddSlotFromDto(slotDto);
+        }
+        
+        game.StartGame(itemCount);
+
+        Debug.Log("Player data received (" + game.OtherPlayerData.board.slots.Count + " slots)");
+        
         // Check if the board data is same
+        
+    }
+
+    public void OnItemsDataReceive(ItemsDataPacket packet)
+    {
+        bool equal = true;
+        foreach (Slot slot in game.MyPlayer.Board.Slots)
+        {
+            if (slot.Item != null)
+            {
+                foreach (ItemDto itemDto in packet.items)
+                {
+                    if (itemDto.id != slot.Item.Id || itemDto.slotId != slot.Id)
+                    {
+                        equal = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (equal)
+        {
+            Debug.Log("EQUAL! WON!");
+        }
+        else
+        {
+            Debug.Log("NOT EQUAL");
+        }
+    }
+
+    public void SendBoardData()
+    {
+        Debug.Log("Send my board data");
+        tcpPeer.SendPacket(game.MyPlayer.ToDto());
+        game.StartGame(itemCount);
+    }
+
+    public void SendItemsData()
+    {
+        ItemsDataPacket packet = new ItemsDataPacket();
+        foreach (Slot slot in game.MyPlayer.Board.Slots)
+        {
+            if (slot.Item != null)
+            {
+                ItemDto itemDto = new ItemDto();
+                itemDto.id = slot.Item.Id;
+                itemDto.slotId = slot.Id;
+                packet.items.Add(itemDto);
+            }
+        }
+        tcpPeer.SendPacket(packet);
     }
 }
 

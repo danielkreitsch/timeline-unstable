@@ -7,5 +7,6 @@ namespace GGJ2020.Game
     public class ItemDto
     {
         public int id;
+        public int slotId;
     }
 }

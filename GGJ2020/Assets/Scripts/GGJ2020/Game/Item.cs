@@ -8,15 +8,17 @@ public class Item : MonoBehaviour
     private const float smoothing = 20;
     private const float startY = 50;
     
-    private string id;
+    [SerializeField] private int id;
     
     private Vector3 targetPos;
-
+    
     public Vector3 TargetPos
     {
         get => targetPos;
         set => targetPos = value;
     }
+
+    public int Id => id;
 
     public void PlaySpawnAnimation()
     {

@@ -5,13 +5,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using GGJ2020.Game;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace GGJ2020
 {
-	public class TcpClientHandler : MonoBehaviour
+	public class TcpClientHandler : TcpPeer
 	{
 		private Thread clientThread;
 		private TcpClient master;
@@ -47,9 +48,13 @@ namespace GGJ2020
 				SendData = false;
 				var packet = new ReadyPacket();
 				packet.message = "hallo welt";
-				ClientWrite(NetworkUtility.ToNetwork(packet));
-				Debug.Log("Client Sent: " + JsonUtility.ToJson(packet));
+				SendPacket(packet);
 			}
+		}
+
+		public override void SendPacket(object packet)
+		{
+			ClientWrite(NetworkUtility.ToNetwork(packet));
 		}
 
 		public void SetHostname(string NewText)
@@ -93,7 +98,14 @@ namespace GGJ2020
 						Debug.Log("Received: " + receivedString);
 						var rec = NetworkUtility.FromNetwork(receivedString);
 
-						Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+						if (rec != null)
+						{
+							Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+						}
+						else
+						{
+							Debug.LogWarning("Packet deserialization didn't work: " + receivedString);
+						}
 					}
 				}
 			}
@@ -120,8 +132,11 @@ namespace GGJ2020
 					return;
 				}
 
-				byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+				Debug.Log("Sent: " + message);
+
+				byte[] messageBytes = Encoding.ASCII.GetBytes(message + "\n");
 				stream.Write(messageBytes, 0, messageBytes.Length);
+				stream.Flush();
 			}
 			catch (SocketException)
 			{

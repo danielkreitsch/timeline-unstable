@@ -5,12 +5,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using GGJ2020.Game;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace GGJ2020
 {
-    public class TcpServer : MonoBehaviour
+    public class TcpServer : TcpPeer
     {
         private TcpClient client;
         private Thread serverThread;
@@ -37,10 +38,14 @@ namespace GGJ2020
             if (SendData)
             {
                 SendData = false;
-                var data = JsonUtility.ToJson(new PlayerDto());
-                MasterWrite(NetworkUtility.ToNetwork(new PlayerDto()));
-                Debug.Log("Master Sent: " + data);
+                var packet = new StartGamePacket();
+                SendPacket(packet);
             }
+        }
+        
+        public override void SendPacket(object packet)
+        {
+            MasterWrite(NetworkUtility.ToNetwork(packet));
         }
 
         void MasterListen()
@@ -70,7 +75,15 @@ namespace GGJ2020
                         string receivedString = Encoding.ASCII.GetString(buffer);
                         Debug.Log("Received: " + receivedString);
                         var rec = NetworkUtility.FromNetwork(receivedString);
-                        Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+
+                        if (rec != null)
+                        {
+                            Run.OnMainThread(() => gameController.OnReceivePacket(rec));
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Packet deserialization didn't work: " + receivedString);
+                        }
                     }
                 }
             }
@@ -96,9 +109,12 @@ namespace GGJ2020
                     Debug.Log("Master Cannot write to stream");
                     return;
                 }
+                
+                Debug.Log("Sent: " + message);
 
-                byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+                byte[] messageBytes = Encoding.ASCII.GetBytes(message + "\n");
                 stream.Write(messageBytes, 0, messageBytes.Length);
+                stream.Flush();
             }
             catch (SocketException)
             {
