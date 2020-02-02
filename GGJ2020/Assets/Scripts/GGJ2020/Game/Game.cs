@@ -16,6 +16,8 @@ public class Game : MonoBehaviour
     
     [SerializeField] private GameObject[] itemPrefabs;
 
+    [SerializeField] private UnityEvent onCountdownStart;
+    
     public GameObject postGameForm;
     
     private State state;
@@ -61,6 +63,9 @@ public class Game : MonoBehaviour
     }
     IEnumerator CStartGame(List<int> itemIds)
     {
+        onCountdownStart.Invoke();
+        yield return new WaitForSeconds(3);
+        
         List<Slot> randomSlots = GetRandomSlots(itemIds.Count);
         
         for (int i = 0; i < itemIds.Count; i++)
