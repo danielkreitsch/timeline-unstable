@@ -13,6 +13,8 @@ public class DramaGenerator : MonoBehaviour
     CameraShaker shaker;
     [SerializeField]
     Volume postProcessingVolume;
+    [SerializeField]
+    Renderer skybox;
 
     ChromaticAberration abberation;
 
@@ -25,7 +27,13 @@ public class DramaGenerator : MonoBehaviour
     [SerializeField]
     float maxAbberationTime;
     [SerializeField]
+    AnimationCurve abberationIntensity;
+    [SerializeField]
     float maxVignetteTime;
+    [SerializeField]
+    AnimationCurve skyboxOffset;
+    [SerializeField]
+    float maxSkyboxTime;
 
     float maxAbberation;
     float maxVignette;
@@ -55,8 +63,10 @@ public class DramaGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        abberation.intensity.Override(Mathf.Clamp((game.Timer / maxAbberationTime)*maxAbberation, 0, maxAbberation));
+        float eval = Mathf.Clamp(game.Timer / maxSkyboxTime, 0, maxSkyboxTime);
+        skybox.material.SetFloat("Vector1_248BB884", skyboxOffset.Evaluate(eval));
+        float abber = abberationIntensity.Evaluate(Mathf.Clamp((game.Timer / maxAbberationTime) * maxAbberation, 0, maxAbberation));
+        abberation.intensity.Override(abber);
         vignette.intensity.Override(Mathf.Clamp((game.Timer / maxVignetteTime)*maxVignette, 0, maxVignette));
         vignette.color.Override(Random.ColorHSV());
     }
