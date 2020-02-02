@@ -168,6 +168,7 @@ public class Game : MonoBehaviour
         {
             onGameLost.Invoke();
         }
+
         running = false;
 
         if (Tcp.Type == TcpType.Server)
@@ -178,7 +179,13 @@ public class Game : MonoBehaviour
 
     IEnumerator CEndGame()
     {
-        yield return new WaitForSeconds(6);
+        /*float extraTimer = 0;
+        while (timer + extraTimer < 20)
+        {
+            yield return new WaitForEndOfFrame();
+            extraTimer += Time.deltaTime;
+        }*/
+        yield return new WaitForSeconds(7);
         Tcp.Peer.SendPacket(new RestartGamePacket());
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

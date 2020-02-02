@@ -10,8 +10,15 @@ namespace GGJ2020.Game
         [SerializeField] private GameObject serverPrefab;
         [SerializeField] private GameObject clientPrefab;
 
+        private string masterIp;
         private TcpPeer peer;
         private TcpType type;
+
+        public static string MasterIp
+        {
+            get => instance.masterIp;
+            set => instance.masterIp = value;
+        }
 
         public static TcpPeer Peer
         {
@@ -36,12 +43,15 @@ namespace GGJ2020.Game
                 GameObject obj = Instantiate(instance.serverPrefab);
                 TcpServer peer = obj.GetComponent<TcpServer>();
                 instance.peer = peer;
+                peer.Init();
             }
             else if (type == TcpType.Client)
             {
                 GameObject obj = Instantiate(instance.clientPrefab);
                 TcpClient peer = obj.GetComponent<TcpClient>();
+                peer.MasterIp = MasterIp;
                 instance.peer = peer;
+                peer.Connect();
             }
         }
         

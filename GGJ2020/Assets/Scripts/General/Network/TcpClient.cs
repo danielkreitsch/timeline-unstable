@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace GGJ2020
 {
@@ -23,13 +24,18 @@ namespace GGJ2020
 		public int Port = 12345;
 		
 		// Start is called before the first frame update
-		void OnEnable()
+		public void Connect()
 		{
 			try
 			{
 				clientThread = new Thread(ClientListen);
 				clientThread.IsBackground = true;
 				clientThread.Start();
+
+				if (SceneManager.GetActiveScene().name == "main_menu")
+				{
+					SceneManager.LoadScene("game");
+				}
 			}
 			catch (SocketException e)
 			{

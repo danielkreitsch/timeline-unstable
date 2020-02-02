@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject joinForm;
+    
     public void OnHostClick()
     {
         Debug.Log("Host");
@@ -19,9 +21,10 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Join");
         
-        Tcp.StartTcp(TcpType.Client);
+        joinForm.SetActive(true);
         
-        SceneManager.LoadScene("game");
+        //Tcp.StartTcp(TcpType.Client);
+        //SceneManager.LoadScene("game");
     }
 
     public void OnCreditsClick()

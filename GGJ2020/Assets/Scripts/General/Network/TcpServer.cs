@@ -21,7 +21,7 @@ namespace GGJ2020
         public int Port = 12345;
         
         // Start is called before the first frame update
-        void OnEnable()
+        public void Init()
         {
             serverThread = new Thread(MasterListen);
             serverThread.IsBackground = true;
