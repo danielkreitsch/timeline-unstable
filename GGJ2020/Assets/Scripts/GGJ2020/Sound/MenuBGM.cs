@@ -30,6 +30,9 @@ public class MenuBGM : MonoBehaviour
             case "game":
                 StopPlay();
                 break;
+            case "game_over":
+                StartPlay();
+                break;
         }
     }
 
